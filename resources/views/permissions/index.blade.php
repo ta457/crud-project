@@ -1,0 +1,44 @@
+<x-app-layout>
+    <x-slot name="sidebar">
+        <x-sidebar></x-sidebar>
+    </x-slot>
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Permissions') }}
+        </h2>
+    </x-slot>
+
+    <div class="">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="overflow-hidden">
+                <div class="text-gray-900 dark:text-gray-100">
+
+                    <x-table :head="['ID', 'Name', 'Description']">
+                        @php $route = '/permissions'; @endphp
+
+                        <x-slot name="search">
+                            <x-table-search :route="$route"></x-table-search>
+                        </x-slot>
+
+                        <x-slot name="tbody">
+                            @foreach ($permissions as $permission)
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
+                                    <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->id" />
+                                    <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->name" />
+                                    <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->description" />
+                                    <x-table-row-delete-btn :route="$route.'/'.$permission->id" />
+                                </tr>
+                            @endforeach
+                        </x-slot>
+
+                        <x-slot name="links">
+                            {{ $permissions->links() }}
+                        </x-slot>
+                    </x-table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
