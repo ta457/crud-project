@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 
@@ -12,5 +14,31 @@ class PermissionController extends Controller
         $permissions = Permission::paginate(10);
 
         return view('permissions.index', compact('permissions'));
+    }
+
+    public function store(StorePermissionRequest $request)
+    {
+        Permission::create($request->validated());
+
+        return redirect()->route('web.permissions.index');
+    }
+
+    public function show(Permission $permission)
+    {
+        return view('permissions.show', compact('permission'));
+    }
+
+    public function update(UpdatePermissionRequest $request, Permission $permission)
+    {
+        $permission->update($request->validated());
+
+        return redirect()->route('web.permissions.show', $permission->id);
+    }
+
+    public function destroy(Permission $permission)
+    {
+        $permission->delete();
+
+        return redirect()->route('web.permissions.index');
     }
 }

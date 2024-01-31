@@ -26,4 +26,17 @@ class StoreRoleRequest extends FormRequest
             'description' => 'required',
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'Name khong duoc de trong',
+            'description.required' => 'Description khong duoc de trong',
+        ];
+    }
 }
