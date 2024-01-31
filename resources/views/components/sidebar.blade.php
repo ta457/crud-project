@@ -32,7 +32,12 @@
             @endif
             
             @if ($user->hasPermission('view-categories'))
-                <x-sidebar-item href="/categories" text="Categories" :active="request()->routeIs('web.categories.index') || request()->routeIs('web.categories.show')">
+                <x-sidebar-item 
+                    href="/categories" text="Categories" 
+                    :active="request()->routeIs('web.categories.index') || 
+                        request()->routeIs('web.categories.show') ||
+                        request()->routeIs('web.sub-categories.index') ||
+                        request()->routeIs('web.sub-categories.show')">
                     <x-icons.category-icon />
                 </x-sidebar-item>
             @endif

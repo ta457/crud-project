@@ -29,7 +29,9 @@ class CategoryController extends Controller
     {
         $user = auth()->user();
 
-        return view('categories.show', compact('category', 'user'));
+        $subCategories = $category->subCategories()->get();
+
+        return view('categories.show', compact('category', 'user', 'subCategories'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
