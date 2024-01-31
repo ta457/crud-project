@@ -77,4 +77,12 @@ class User extends Authenticatable
             }
         }
     }
+
+    // get all users with a given role
+    public function scopeRole($query, Role $role)
+    {
+        return $query->whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role->name);
+        });
+    }
 }

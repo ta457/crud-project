@@ -6,7 +6,9 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Permission;
+use App\Models\Product;
 use App\Models\Role;
+use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -182,5 +184,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'Sub Category 4',
             'description' => 'Sub Category 4 description'
         ]);
+        
+        foreach (SubCategory::all() as $subCategory)
+        {
+            Product::factory(2)->create([
+                'sub_category_id' => $subCategory->id
+            ]);
+        }
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Permission;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/categories/{category}/sub-categories', [SubCategoryController::class, 'store'])->name('web.sub-categories.store');
     Route::patch('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('web.sub-categories.update');
     Route::delete('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])->name('web.sub-categories.destroy');
+
+    Route::get('/products', [ProductController::class, 'index'])->name('web.products.index');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('web.products.show');
+    Route::post('/products', [ProductController::class, 'store'])->name('web.products.store');
+    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('web.products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('web.products.destroy');
 });
 
 require __DIR__.'/auth.php';
