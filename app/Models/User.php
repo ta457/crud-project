@@ -63,6 +63,10 @@ class User extends Authenticatable
 
     public function hasPermission($permissionName)
     {
+        if ($this->hasRole('super-admin')) {
+            return true;
+        }
+
         $roles = $this->roles;
 
         $permission = Permission::where('name', $permissionName)->first();

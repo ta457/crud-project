@@ -12,7 +12,7 @@
             {{ __('Roles') }}
         </h2>
 
-        @if ($user->hasRole('super-admin') || $user->hasPermission('create-role'))
+        @if ($user->hasPermission('create-role'))
             <div>
                 <x-create-item-btn>New role</x-create-item-btn>
             </div>
@@ -36,7 +36,7 @@
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->id" />
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->name" />
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->description" />
-                                    @if ($user->hasRole('super-admin') || $user->hasPermission('delete-role'))
+                                    @if ($user->hasPermission('delete-role'))
                                         <x-table-row-delete-btn :route="$route.'/'.$role->id" />
                                     @endif
                                 </tr>
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    @if ($user->hasRole('super-admin') || $user->hasPermission('create-role'))
+    @if ($user->hasPermission('create-role'))
         <x-create-item-modal :route="$route" header="Add role">
             <div class="sm:col-span-2">
                 <label for="name"

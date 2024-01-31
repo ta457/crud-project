@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Permission;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +52,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('web.users.store');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('web.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('web.users.destroy');
+
+    Route::get('/categories', [CategoryController::class, 'index'])->name('web.categories.index');
+    Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('web.categories.show');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('web.categories.store');
+    Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('web.categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('web.categories.destroy');
+
+    Route::get('/categories/{category}/sub-categories', [SubCategoryController::class, 'index'])->name('web.sub-categories.index');
+    Route::get('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'show'])->name('web.sub-categories.show');
+    Route::post('/categories/{category}/sub-categories', [SubCategoryController::class, 'store'])->name('web.sub-categories.store');
+    Route::patch('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('web.sub-categories.update');
+    Route::delete('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])->name('web.sub-categories.destroy');
 });
 
 require __DIR__.'/auth.php';

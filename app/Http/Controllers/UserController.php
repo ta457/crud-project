@@ -13,7 +13,9 @@ class UserController extends Controller
     {
         $users = User::paginate(10);
 
-        return view('users.index', compact('users'));
+        $currentUser = auth()->user();
+
+        return view('users.index', compact('users', 'currentUser'));
     }
 
     public function store(StoreUserRequest $request)
@@ -29,10 +31,12 @@ class UserController extends Controller
             return redirect()->route('web.users.index');
         }
 
+        $currentUser = auth()->user();
+
         // get all roles and remove the first role (admin) from the list
         $roles = Role::all()->except(1);
 
-        return view('users.show', compact('user', 'roles'));
+        return view('users.show', compact('user', 'roles', 'currentUser'));
     }
 
     public function update(UpdateUserRequest $request, User $user)

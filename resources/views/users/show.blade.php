@@ -12,9 +12,10 @@
     <div class="">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden">
+                @if ($currentUser->hasPermission('update-user'))
                 <form action="/users/{{ $user->id }}" method="POST">
                     @csrf
-                    @method('PATCH')
+                    @method('PATCH') @endif
                     <div class="text-gray-900 dark:text-gray-100 flex flex-col gap-4">
                         <div class="max-w-lg">
                             <label for="name"
@@ -53,13 +54,15 @@
                                 @endforeach
                             </div>
                         </div>
-                        <div class="max-w-lg">
-                            <button
-                                class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-                                type="submit">
-                                Save
-                            </button>
-                        </div>               
+                        @if ($currentUser->hasPermission('update-user'))
+                            <div class="max-w-lg">
+                                <button
+                                    class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                                    type="submit">
+                                    Save
+                                </button>
+                            </div>
+                        @endif         
                     </div>
                 </form>
             </div>
