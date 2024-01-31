@@ -13,7 +13,9 @@ class PermissionController extends Controller
     {
         $permissions = Permission::paginate(10);
 
-        return view('permissions.index', compact('permissions'));
+        $user = auth()->user();
+
+        return view('permissions.index', compact('permissions', 'user'));
     }
 
     public function store(StorePermissionRequest $request)
@@ -25,7 +27,9 @@ class PermissionController extends Controller
 
     public function show(Permission $permission)
     {
-        return view('permissions.show', compact('permission'));
+        $user = auth()->user();
+
+        return view('permissions.show', compact('permission', 'user'));
     }
 
     public function update(UpdatePermissionRequest $request, Permission $permission)

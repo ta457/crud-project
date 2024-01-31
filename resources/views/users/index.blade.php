@@ -8,9 +8,11 @@
             {{ __('Users') }}
         </h2>
 
-        <div class="">
-            <x-create-item-btn>New user</x-create-item-btn>
-        </div>
+        @if ($currentUser->hasPermission('create-user'))
+            <div class="">
+                <x-create-item-btn>New user</x-create-item-btn>
+            </div>
+        @endif
     </x-slot>
 
     <div class="">
@@ -32,7 +34,9 @@
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->name" />
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->email" />
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->roleNameList"></x-table-cell>
-                                    <x-table-row-delete-btn :route="$route.'/'.$user->id" />
+                                    @if ($currentUser->hasPermission('delete-user'))
+                                        <x-table-row-delete-btn :route="$route.'/'.$user->id" />
+                                    @endif
                                 </tr>
                             @endforeach
                         </x-slot>
@@ -47,27 +51,29 @@
         </div>
     </div>
 
-    <x-create-item-modal :route="$route" header="Add user">
-        <div class="sm:col-span-2">
-            <label for="name"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User name</label>
-            <input type="text" name="name" id="name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type user name">
-        </div>
-        <div class="sm:col-span-2">
-            <label for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-            <input type="email" name="email" id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type user email">
-        </div>
-        <div class="sm:col-span-2">
-            <label for="password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-            <input type="password" name="password" id="password"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type user password">
-        </div>
-    </x-create-item-modal>
+    @if ($currentUser->hasPermission('create-user'))
+        <x-create-item-modal :route="$route" header="Add user">
+            <div class="sm:col-span-2">
+                <label for="name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User name</label>
+                <input type="text" name="name" id="name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Type user name">
+            </div>
+            <div class="sm:col-span-2">
+                <label for="email"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                <input type="email" name="email" id="email"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Type user email">
+            </div>
+            <div class="sm:col-span-2">
+                <label for="password"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="password" name="password" id="password"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Type user password">
+            </div>
+        </x-create-item-modal>
+    @endif
 </x-app-layout>

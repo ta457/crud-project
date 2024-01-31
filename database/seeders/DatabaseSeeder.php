@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -146,6 +147,40 @@ class DatabaseSeeder extends Seeder
             $createProd->id,
             $updateProd->id,
             $deleteProd->id
+        ]);
+
+        // create categories ========================================================
+
+        $category1 = Category::create([
+            'name' => 'Category 1',
+            'description' => 'Category 1 description'
+        ]);
+
+        $category2 = Category::create([
+            'name' => 'Category 2',
+            'description' => 'Category 2 description'
+        ]);
+
+        // create sub categories ====================================================
+
+        $category1->subCategories()->create([
+            'name' => 'Sub Category 1',
+            'description' => 'Sub Category 1 description'
+        ]);
+
+        $category1->subCategories()->create([
+            'name' => 'Sub Category 2',
+            'description' => 'Sub Category 2 description'
+        ]);
+
+        $category2->subCategories()->create([
+            'name' => 'Sub Category 3',
+            'description' => 'Sub Category 3 description'
+        ]);
+
+        $category2->subCategories()->create([
+            'name' => 'Sub Category 4',
+            'description' => 'Sub Category 4 description'
         ]);
     }
 }
