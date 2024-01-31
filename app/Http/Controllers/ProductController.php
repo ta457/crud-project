@@ -19,7 +19,7 @@ class ProductController extends Controller
 
         $user = auth()->user();
 
-        return view('products.index', compact('products','user','categories'));
+        return view('products.index', compact('products', 'user', 'categories'));
     }
 
     public function show(Product $product)
@@ -28,7 +28,7 @@ class ProductController extends Controller
 
         $user = auth()->user();
 
-        return view('products.show', compact('product','user','categories'));
+        return view('products.show', compact('product', 'user', 'categories'));
     }
 
     public function store(StoreProductRequest $request)
@@ -37,9 +37,8 @@ class ProductController extends Controller
 
         if ($request->file('img')) {
             $manager = new ImageManager(new Driver());
-            $imageName = $request->file('img')->getClientOriginalName();
-            $img = $manager->read($request->file('img'));
-            $img = $img->resize(300, 300);
+            $imageName = 'prodId_' . $product->id . '_' . $request->file('img')->getClientOriginalName();
+            $img = $manager->read($request->file('img'))->resize(300, 300);
             $img->save(base_path('public/images/products/' . $imageName));
             $product->img = $imageName;
             $product->save();
@@ -50,6 +49,14 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // delete this product image
+        if (
+            $product->img !== null &&
+            file_exists(base_path('public/images/products/' . $product->img))
+        ) {
+            unlink(base_path('public/images/products/' . $product->img));
+        }
+
         $product->delete();
 
         return redirect()->route('web.products.index');
@@ -57,14 +64,20 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //dd($request->validated());
         $product->update($request->validated());
 
         if ($request->file('img')) {
+            // delete this product current image
+            if (
+                $product->img !== null &&
+                file_exists(base_path('public/images/products/' . $product->img))
+            ) {
+                unlink(base_path('public/images/products/' . $product->img));
+            }
+
             $manager = new ImageManager(new Driver());
-            $imageName = $request->file('img')->getClientOriginalName();
-            $img = $manager->read($request->file('img'));
-            $img = $img->resize(300, 300);
+            $imageName = 'prodId_' . $product->id . '_' . $request->file('img')->getClientOriginalName();
+            $img = $manager->read($request->file('img'))->resize(300, 300);
             $img->save(base_path('public/images/products/' . $imageName));
             $product->img = $imageName;
             $product->save();
