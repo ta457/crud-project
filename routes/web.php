@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'admin')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->name('web.roles.index');
     Route::get('/roles/{role}', [RoleController::class, 'show'])->name('web.roles.show');
     Route::post('/roles', [RoleController::class, 'store'])->name('web.roles.store');
@@ -53,7 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('web.users.store');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('web.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('web.users.destroy');
+});
 
+Route::middleware('auth')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('web.categories.index');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('web.categories.show');
     Route::post('/categories', [CategoryController::class, 'store'])->name('web.categories.store');

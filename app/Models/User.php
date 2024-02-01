@@ -76,6 +76,8 @@ class User extends Authenticatable
                 return true;
             }
         }
+
+        return false;
     }
     
     public function scopeSearch($query, $keyword)

@@ -15,6 +15,10 @@ class MustBeAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $user = auth()->user();
+        if (!$user->hasRole('super-admin')) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
         return $next($request);
     }
 }

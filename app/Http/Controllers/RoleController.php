@@ -7,11 +7,16 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
     public function index()
     {
+        if (! Gate::allows('view-roles')) {
+            abort(403);
+        }
+
         $roles = Role::paginate(10);
 
         $user = auth()->user();
@@ -21,6 +26,10 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        if (! Gate::allows('create-role')) {
+            abort(403);
+        }
+
         Role::create($request->validated());
 
         return redirect()->route('web.roles.index');
@@ -41,6 +50,10 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        if (! Gate::allows('update-role')) {
+            abort(403);
+        }
+
         if ($role->id === 1) {
             return redirect()->route('web.roles.index');
         }
@@ -58,6 +71,10 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        if (! Gate::allows('delete-role')) {
+            abort(403);
+        }
+
         if ($role->id !== 1) {
             $role->delete();
         }
