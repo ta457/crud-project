@@ -23,11 +23,25 @@ class Product extends Model
 
     public function getImagePathAttribute()
     {
+        if ($this->img === null) {
+            return 'default.png';
+        }
+
         return '/images/products/' . $this->img;
     }
 
     public function scopePriceHigherThan($query, $price)
     {
         return $query->where('price', '>', $price);
+    }
+
+    public function scopeSearch($query, $keyword, $categoryId)
+    {
+        if ($categoryId == 0) {
+            return $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        return $query->where('name', 'like', '%' . $keyword . '%')
+            ->where('sub_category_id', $categoryId);
     }
 }

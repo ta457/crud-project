@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -59,5 +60,16 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('web.users.index');
+    }
+
+    public function search(Request $request)
+    {
+        $searchKeyword = $request->input('search');
+
+        $users = User::search($searchKeyword)->paginate(10);
+
+        $currentUser = auth()->user();
+
+        return view('users.index', compact('users', 'currentUser'));
     }
 }

@@ -27,18 +27,50 @@
                     <x-table :head="['ID', 'Category', 'Name', 'Description', 'Price', 'Qty']">
 
                         <x-slot name="search">
-                            <x-table-search :route="$route"></x-table-search>
+                            <x-table-search :route="$route">
+                                <select class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                                    name="sub_category_id" id="sub_category_id">
+                                    <option value="0">All</option>
+                                    @foreach ($subCategories as $subCate)
+                                        <option value="{{ $subCate->id }}">{{ $subCate->name }}</option>
+                                    @endforeach
+                                </select>
+                            </x-table-search>
                         </x-slot>
 
                         <x-slot name="tbody">
                             @foreach ($products as $product)
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->id" />
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->category_name" />
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->name" />
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->description" />
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->price" />
-                                    <x-table-cell :route="$route . '/' . $product->id" :data="$product->quantity" />
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->id }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->category_name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->description }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->price }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                            {{ $product->quantity }}
+                                        </a>
+                                    </td>
                                     @if ($user->hasPermission('delete-product'))
                                         <x-table-row-delete-btn :route="$route . '/' . $product->id" />
                                     @endif
@@ -98,14 +130,14 @@
             <div class="sm:col-span-2">
                 <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     price</label>
-                <input onkeypress="return isNumberKey(event)" type="text" name="price" id="price"
+                <input min="0" type="number" name="price" id="price"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product price">
             </div>
             <div class="sm:col-span-2">
                 <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     quantity</label>
-                <input onkeypress="return isNumberKey(event)" type="text" name="quantity" id="quantity"
+                <input min="0" type="number" name="quantity" id="quantity"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product quantity">
             </div>
@@ -115,9 +147,11 @@
                 <input type="file" name="img" id="img"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
             </div>
+
         </x-create-item-modal>
+
+        <x-update-product-modal :subCategories="$subCategories" :user="$user"></x-update-product-modal>
     @endif
-
+    
     <x-products-script />
-
 </x-app-layout>

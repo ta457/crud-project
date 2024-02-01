@@ -3,7 +3,6 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Permission;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubCategoryController;
@@ -35,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'admin')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->name('web.roles.index');
     Route::get('/roles/{role}', [RoleController::class, 'show'])->name('web.roles.show');
     Route::post('/roles', [RoleController::class, 'store'])->name('web.roles.store');
@@ -48,12 +47,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/permissions/{permission}', [PermissionController::class, 'update'])->name('web.permissions.update');
     Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('web.permissions.destroy');
 
+    Route::get('/users/search', [UserController::class, 'search'])->name('web.users.search');
     Route::get('/users', [UserController::class, 'index'])->name('web.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('web.users.show');
     Route::post('/users', [UserController::class, 'store'])->name('web.users.store');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('web.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('web.users.destroy');
+});
 
+Route::middleware('auth')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('web.categories.index');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('web.categories.show');
     Route::post('/categories', [CategoryController::class, 'store'])->name('web.categories.store');
@@ -66,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('web.sub-categories.update');
     Route::delete('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])->name('web.sub-categories.destroy');
 
+    Route::get('/products/search', [ProductController::class, 'search'])->name('web.products.search');
     Route::get('/products', [ProductController::class, 'index'])->name('web.products.index');
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('web.products.show');
     Route::post('/products', [ProductController::class, 'store'])->name('web.products.store');

@@ -27,7 +27,6 @@
                     <x-table :head="['ID', 'Name', 'Description']">
                         
                         <x-slot name="search">
-                            <x-table-search :route="$route"></x-table-search>
                         </x-slot>
 
                         <x-slot name="tbody">

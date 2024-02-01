@@ -25,14 +25,31 @@
         });
     });
 
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
+    function showProduct(productId) {
+        document.getElementById("updateProductForm").action = `products/${productId}`;
 
-        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 8 && charCode !== 46 &&
-            charCode !== 9) {
-            return false;
-        }
+        fetch(`http://localhost:8088/api/products/${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                // target the sub_category_id-select, set the option with same category name as selected
+                const cateSelect = document.getElementById("sub_category_id-select");
+                const cateOptions = cateSelect.options;
+                for (let i = 0; i < cateOptions.length; i++) {
+                    if (cateOptions[i].text === data.data.category) {
+                        cateOptions[i].selected = true;
+                        break;
+                    }
+                }
+                
+                document.getElementById("update-name").value = data.data.name;
+                document.getElementById("update-description").value = data.data.description;
+                document.getElementById("update-price").value = data.data.price;
+                document.getElementById("update-quantity").value = data.data.quantity;
+                document.getElementById("product-img").src = data.data.img;
+            })
+            .catch(error => console.error('Error fetching product data:', error));
 
-        return true;
+        const trigger = document.getElementById("updateProductModalBtn");
+        trigger.click();
     }
 </script>
