@@ -77,12 +77,13 @@ class User extends Authenticatable
             }
         }
     }
-
-    // get all users with a given role
-    public function scopeRole($query, Role $role)
+    
+    public function scopeSearch($query, $keyword)
     {
-        return $query->whereHas('roles', function ($query) use ($role) {
-            $query->where('name', $role->name);
-        });
+        return $query->where('name', 'like', "%$keyword%")
+            ->orWhere('email', 'like', "%$keyword%")
+            ->orWhereHas('roles', function ($query) use ($keyword) {
+                $query->where('name', 'like', "%$keyword%");
+            });
     }
 }

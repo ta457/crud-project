@@ -19,6 +19,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // create super admin & user roles ======================================
+
+        $supAdminRole = Role::create([
+            'name' => 'super-admin',
+            'description' => 'super admin'
+        ]);
+
+        $userRole = Role::create([
+            'name' => 'user',
+            'description' => 'user'
+        ]);
+
         // create super admin & user accounts ====================================
 
         $admin = User::factory()->create([
@@ -31,18 +43,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@gmail.com',
             'password' => '11111111'
-        ]);
-
-        // create super admin & user roles ======================================
-
-        $supAdminRole = Role::create([
-            'name' => 'super-admin',
-            'description' => 'super admin'
-        ]);
-
-        $userRole = Role::create([
-            'name' => 'user',
-            'description' => 'user'
         ]);
 
         // create permissions ====================================================
@@ -154,35 +154,35 @@ class DatabaseSeeder extends Seeder
         // create categories ========================================================
 
         $category1 = Category::create([
-            'name' => 'Category 1',
-            'description' => 'Category 1 description'
+            'name' => 'Meat',
+            'description' => 'Meat description'
         ]);
 
         $category2 = Category::create([
-            'name' => 'Category 2',
-            'description' => 'Category 2 description'
+            'name' => 'Fruit',
+            'description' => 'Fruit description'
         ]);
 
         // create sub categories ====================================================
 
         $category1->subCategories()->create([
-            'name' => 'Sub Category 1',
-            'description' => 'Sub Category 1 description'
+            'name' => 'Beef',
+            'description' => 'Beef description'
         ]);
 
         $category1->subCategories()->create([
-            'name' => 'Sub Category 2',
-            'description' => 'Sub Category 2 description'
+            'name' => 'Chicken',
+            'description' => 'Chicken description'
         ]);
 
         $category2->subCategories()->create([
-            'name' => 'Sub Category 3',
-            'description' => 'Sub Category 3 description'
+            'name' => 'Apple',
+            'description' => 'Apple description'
         ]);
 
         $category2->subCategories()->create([
-            'name' => 'Sub Category 4',
-            'description' => 'Sub Category 4 description'
+            'name' => 'Orange',
+            'description' => 'Orange description'
         ]);
         
         foreach (SubCategory::all() as $subCategory)

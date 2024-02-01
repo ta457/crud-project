@@ -6,6 +6,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
+use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -15,11 +17,13 @@ class ProductController extends Controller
     {
         $categories = Category::all();
 
+        $subCategories = SubCategory::all();
+
         $products = Product::with('subCategory')->paginate(10);
 
         $user = auth()->user();
 
-        return view('products.index', compact('products', 'user', 'categories'));
+        return view('products.index', compact('products', 'user', 'categories', 'subCategories'));
     }
 
     public function show(Product $product)
@@ -83,6 +87,22 @@ class ProductController extends Controller
             $product->save();
         }
 
-        return redirect()->route('web.products.show', $product);
+        return redirect()->route('web.products.index');
+    }
+
+    public function search(Request $request)
+    {
+        $searchKeyword = $request->input('search');
+        $searchCategory = $request->input('sub_category_id');
+
+        $products = Product::search($searchKeyword, $searchCategory)->paginate(10);
+
+        $user = auth()->user();
+
+        $categories = Category::all();
+
+        $subCategories = SubCategory::all();
+
+        return view('products.index', compact('products', 'user', 'categories', 'subCategories'));
     }
 }

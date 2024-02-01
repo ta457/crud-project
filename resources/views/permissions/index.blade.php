@@ -24,7 +24,6 @@
                         @php $route = '/permissions'; @endphp
 
                         <x-slot name="search">
-                            <x-table-search :route="$route"></x-table-search>
                         </x-slot>
 
                         <x-slot name="tbody">
