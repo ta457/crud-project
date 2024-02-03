@@ -25,43 +25,21 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('view-roles', function (User $user) {
-            return $user->hasPermission('view-roles');
-        });
-        Gate::define('create-role', function (User $user) {
-            return $user->hasPermission('create-role');
-        });
-        Gate::define('update-role', function (User $user) {
-            return $user->hasPermission('update-role');
-        });
-        Gate::define('delete-role', function (User $user) {
-            return $user->hasPermission('delete-role');
-        });
+        $this->defineGates([
+            'view-roles', 'create-role', 'update-role', 'delete-role',
+            'view-permissions',
+            'view-users', 'create-user', 'update-user', 'delete-user',
+            'view-categories', 'create-category', 'update-category', 'delete-category',
+            'view-products', 'create-product', 'update-product', 'delete-product',
+        ]);
+    }
 
-        Gate::define('view-permissions', function (User $user) {
-            return $user->hasPermission('view-permissions');
-        });
-        Gate::define('create-permission', function (User $user) {
-            return $user->hasPermission('create-permission');
-        });
-        Gate::define('update-permission', function (User $user) {
-            return $user->hasPermission('update-permission');
-        });
-        Gate::define('delete-permission', function (User $user) {
-            return $user->hasPermission('delete-permission');
-        });
-
-        Gate::define('view-users', function (User $user) {
-            return $user->hasPermission('view-users');
-        });
-        Gate::define('create-user', function (User $user) {
-            return $user->hasPermission('create-user');
-        });
-        Gate::define('update-user', function (User $user) {
-            return $user->hasPermission('update-user');
-        });
-        Gate::define('delete-user', function (User $user) {
-            return $user->hasPermission('delete-user');
-        });
+    private function defineGates(array $permissions): void
+    {
+        foreach ($permissions as $permission) {
+            Gate::define($permission, function (User $user) use ($permission) {
+                return $user->hasPermission($permission);
+            });
+        }
     }
 }

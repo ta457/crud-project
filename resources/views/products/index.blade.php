@@ -28,7 +28,8 @@
 
                         <x-slot name="search">
                             <x-table-search :route="$route">
-                                <select class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                                <select
+                                    class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     name="sub_category_id" id="sub_category_id">
                                     <option value="0">All</option>
                                     @foreach ($subCategories as $subCate)
@@ -42,37 +43,43 @@
                             @foreach ($products as $product)
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->id }}
                                         </a>
                                     </td>
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->category_name }}
                                         </a>
                                     </td>
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->name }}
                                         </a>
                                     </td>
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->description }}
                                         </a>
                                     </td>
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->price }}
                                         </a>
                                     </td>
                                     <td>
-                                        <a onclick="showProduct({{ $product->id }})" class="cursor-pointer block w-full h-full px-4 py-2">
+                                        <a onclick="showProduct({{ $product->id }})"
+                                            class="cursor-pointer block w-full h-full px-4 py-2">
                                             {{ $product->quantity }}
                                         </a>
                                     </td>
                                     @if ($user->hasPermission('delete-product'))
-                                        <x-table-row-delete-btn :route="$route . '/' . $product->id" />
+                                        <x-table-row-delete-btn :route="$route" :id="$product->id" />
                                     @endif
                                 </tr>
                             @endforeach
@@ -93,24 +100,13 @@
             <div class="sm:col-span-2">
                 <label for="sub_category_id"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product category</label>
-                <input type="hidden" name="sub_category_id" id="sub_category_id" value="">
                 <div class="flex gap-2">
-                    <select name="category" id="category"
+                    <select name="sub_category_id" id="sub_category_id"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>Choose category</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @foreach ($subCategories as $subCategory)
+                            <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
                         @endforeach
                     </select>
-                    @foreach ($categories as $category)
-                        <select name="sub_category_{{ $category->id }}" id="sub_category_{{ $category->id }}"
-                            class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option value="" selected>Choose sub-category</option>
-                            @foreach ($category->subCategories()->get() as $subCategory)
-                                <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
-                            @endforeach
-                        </select>
-                    @endforeach
                 </div>
             </div>
             <div class="sm:col-span-2">
@@ -152,6 +148,10 @@
 
         <x-update-product-modal :subCategories="$subCategories" :user="$user"></x-update-product-modal>
     @endif
-    
-    <x-products-script />
+
+    <script src="{{ asset('js/product.js') }}"></script>
+
+    @if ($user->hasPermission('delete-product'))
+        <x-delete-modal />
+    @endif
 </x-app-layout>

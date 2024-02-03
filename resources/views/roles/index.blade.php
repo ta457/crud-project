@@ -36,7 +36,7 @@
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->name" />
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->description" />
                                     @if ($user->hasPermission('delete-role'))
-                                        <x-table-row-delete-btn :route="$route.'/'.$role->id" />
+                                        <x-table-row-delete-btn :route="$route" :id="$role->id" />
                                     @endif
                                 </tr>
                             @endforeach
@@ -68,6 +68,43 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type role description">
             </div>
+            <div class="sm:col-span-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role
+                    permissions</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="full-role-access">
+                        <label for="full-role-access" class="font-bold">Full Role Access</label>
+                        <x-permissions-row :perms="$permsForRole" />
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="full-perm-access">
+                        <label for="full-perm-access" class="font-bold">Full Permission Access</label>
+                        <x-permissions-row :perms="$permsForPermission" />
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="full-user-access">
+                        <label for="full-user-access" class="font-bold">Full User Access</label>
+                        <x-permissions-row :perms="$permsForUser" />
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="full-cate-access">
+                        <label for="full-cate-access" class="font-bold">Full Category Access</label>
+                        <x-permissions-row :perms="$permsForCategory" />
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="full-product-access">
+                        <label for="full-product-access" class="font-bold">Full Product Access</label>
+                        <x-permissions-row :perms="$permsForProduct" />
+                    </div>
+                </div>
+            </div>
         </x-create-item-modal>
     @endif
+
+    @if ($user->hasPermission('delete-role'))
+        <x-delete-modal />
+    @endif
+
+    <script src="{{ asset('js/role.js') }}"></script>
 </x-app-layout>

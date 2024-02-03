@@ -6,70 +6,69 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
-        $users = User::paginate(10);
+        $users = $this->userService->getLatestUsers();
 
         $currentUser = auth()->user();
+        $roles = Role::all()->except(1);
 
-        return view('users.index', compact('users', 'currentUser'));
+        return view('users.index', compact('users', 'currentUser', 'roles'));
     }
 
     public function store(StoreUserRequest $request)
     {
-        User::create($request->validated());
+        $this->userService->storeUser($request);
 
         return redirect()->route('web.users.index');
     }
 
     public function show(User $user)
     {
-        if ($user->id === 1) {
+        if ($user->hasRole('super-admin')) {
             return redirect()->route('web.users.index');
         }
 
-        $currentUser = auth()->user();
-
-        // get all roles and remove the first role (admin) from the list
         $roles = Role::all()->except(1);
+        $currentUser = auth()->user();
 
         return view('users.show', compact('user', 'roles', 'currentUser'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        if ($user->id !== 1) {
-            $user->update($request->validated());
-        }
-
-        if ($request->has('selected')) {
-            $selectedRoleIds = $request->input('selected', []);
-            $selectedRoles = Role::whereIn('id', $selectedRoleIds)->get();
-            $user->roles()->sync($selectedRoles);
-        }
+        $this->userService->updateUser($request, $user);
 
         return redirect()->route('web.users.show', $user->id);
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
+        $this->userService->deleteUser($user);
 
         return redirect()->route('web.users.index');
     }
 
     public function search(Request $request)
     {
-        $searchKeyword = $request->input('search');
-
-        $users = User::search($searchKeyword)->paginate(10);
+        $users = $this->userService->search($request->input('search'));
 
         $currentUser = auth()->user();
+        $roles = Role::all()->except(1);
 
-        return view('users.index', compact('users', 'currentUser'));
+        return view('users.index', compact('users', 'currentUser', 'roles'));
     }
 }

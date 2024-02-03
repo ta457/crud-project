@@ -6,31 +6,46 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
+    protected $roleService;
+
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
+
     public function index()
     {
-        if (! Gate::allows('view-roles')) {
-            abort(403);
-        }
-
         $roles = Role::paginate(10);
 
         $user = auth()->user();
 
-        return view('roles.index', compact('roles', 'user'));
+        $permsForRole = Permission::permsForRole()->get();
+        $permsForPermission = Permission::permsForPermission()->get();
+        $permsForUser = Permission::permsForUser()->get();
+        $permsForCategory = Permission::permsForCategory()->get();
+        $permsForProduct = Permission::permsForProduct()->get();
+
+        return view(
+            'roles.index', 
+            compact('roles', 'user', 'permsForRole', 'permsForPermission', 'permsForUser', 'permsForCategory', 'permsForProduct')
+        );
     }
 
     public function store(StoreRoleRequest $request)
     {
-        if (! Gate::allows('create-role')) {
-            abort(403);
-        }
+        $role = Role::create($request->validated());
 
-        Role::create($request->validated());
+        if ($request->has('selected')) {
+            $selectedPermIds = $request->input('selected', []);
+            $selectedPermissions = Permission::whereIn('id', $selectedPermIds)->get();
+            $role->permissions()->sync($selectedPermissions);
+        }
 
         return redirect()->route('web.roles.index');
     }
@@ -43,38 +58,29 @@ class RoleController extends Controller
 
         $user = auth()->user();
 
-        $permissions = Permission::all();
+        $permsForRole = Permission::permsForRole()->get();
+        $permsForPermission = Permission::permsForPermission()->get();
+        $permsForUser = Permission::permsForUser()->get();
+        $permsForCategory = Permission::permsForCategory()->get();
+        $permsForProduct = Permission::permsForProduct()->get();
 
-        return view('roles.show', compact('role', 'user', 'permissions'));
+        $role->hasAllPermissions($permsForProduct);
+
+        return view(
+            'roles.show', 
+            compact('role', 'user', 'permsForRole', 'permsForPermission', 'permsForUser', 'permsForCategory', 'permsForProduct')
+        );
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        if (! Gate::allows('update-role')) {
-            abort(403);
-        }
-
-        if ($role->id === 1) {
-            return redirect()->route('web.roles.index');
-        }
-
-        $role->update($request->validated());
-
-        if ($request->has('selected')) {
-            $selectedPermIds = $request->input('selected', []);
-            $selectedPermissions = Permission::whereIn('id', $selectedPermIds)->get();
-            $role->permissions()->sync($selectedPermissions);
-        }
+        $this->roleService->updateRole($request, $role);
 
         return redirect()->route('web.roles.show', $role->id);
     }
 
     public function destroy(Role $role)
     {
-        if (! Gate::allows('delete-role')) {
-            abort(403);
-        }
-
         if ($role->id !== 1) {
             $role->delete();
         }

@@ -36,7 +36,7 @@
                                     <x-table-cell :route="$route.'/'.$category->id" :data="$category->name" />
                                     <x-table-cell :route="$route.'/'.$category->id" :data="$category->description" />
                                     @if ($user->hasPermission('delete-category'))
-                                        <x-table-row-delete-btn :route="$route.'/'.$category->id" />
+                                        <x-table-row-delete-btn :route="$route" :id="$category->id" />
                                     @endif
                                 </tr>
                             @endforeach
@@ -69,5 +69,9 @@
                     placeholder="Type category description">
             </div>
         </x-create-item-modal>
+    @endif
+
+    @if ($user->hasPermission('delete-category'))
+        <x-delete-modal />
     @endif
 </x-app-layout>
