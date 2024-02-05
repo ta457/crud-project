@@ -66,7 +66,7 @@
     </div>
 
     @if ($user->hasPermission('create-category'))
-        <x-create-item-modal route="/categories" header="Add parent category" modalId="createParentModal">
+        <x-create-item-modal route="/categories" header="Add parent category" modalId="createParentModal" formId="createCate">
             <div class="sm:col-span-2">
                 <label for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Parent name</label>
@@ -83,7 +83,7 @@
             </div>
         </x-create-item-modal>
 
-        <x-create-item-modal route="/sub-categories" header="Add category" modalId="createCategoryModal">
+        <x-create-item-modal route="/sub-categories" header="Add category" modalId="createCategoryModal" formId="createSubCate">
             <div class="sm:col-span-2">
                 <label for="category_id"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Parent</label>

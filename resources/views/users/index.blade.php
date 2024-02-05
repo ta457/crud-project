@@ -56,7 +56,7 @@
     </div>
 
     @if ($currentUser->hasPermission('create-user'))
-        <x-create-item-modal :route="$route" header="Add user" modalId="createUserModal">
+        <x-create-item-modal :route="$route" header="Add user" modalId="createUserModal" formId="createUser">
             <div class="sm:col-span-2">
                 <label for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User name</label>
@@ -84,9 +84,7 @@
                 <div class="grid grid-cols-4 gap-2">
                     @foreach ($roles as $role)
                         <div class="flex items-center gap-1">
-                            <input type="checkbox" name="selected[]" 
-                                id={{ $role->id }} value="{{ $role->id }}"
-                                @if ($user->hasRole($role->name)) checked @endif>
+                            <input type="checkbox" name="selected[]" id={{ $role->id }} value="{{ $role->id }}">
                             <label for="{{ $role->id }}">
                                 <a class="text-primary-600" href="/roles/{{ $role->id }}">{{ $role->name }}</a>
                             </label>
@@ -97,7 +95,7 @@
         </x-create-item-modal>
     @endif
 
-    @if ($user->hasPermission('delete-user'))
+    @if ($currentUser->hasPermission('delete-user'))
         <x-delete-modal />
     @endif
 </x-app-layout>

@@ -20,13 +20,15 @@ class ProductController extends Controller
         $this->subCateService = $subCateService;
     }
 
-    public function index()
+    public function index($products = null)
     {
-        $subCategories = $this->subCateService->getAll();
-
-        $products = $this->prodService->getLatestProducts();
+        if (!$products) {
+            $products = $this->prodService->getLatestProducts();
+        }
 
         $user = auth()->user();
+
+        $subCategories = $this->subCateService->getAll();
 
         return view('products.index', compact('products', 'user', 'subCategories'));
     }
@@ -67,10 +69,6 @@ class ProductController extends Controller
     {
         $products = $this->prodService->search($request->input('search'), $request->input('sub_category_id'));
 
-        $user = auth()->user();
-
-        $subCategories = $this->subCateService->getAll();
-
-        return view('products.index', compact('products', 'user', 'subCategories'));
+        return $this->index($products);
     }
 }

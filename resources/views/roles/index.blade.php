@@ -57,18 +57,18 @@
     </div>
 
     @if ($user->hasPermission('create-role'))
-        <x-create-item-modal :route="$route" header="Add role" modalId="createRoleModal">
+        <x-create-item-modal :route="$route" header="Add role" modalId="createRoleModal" formId="createRole">
             <div class="sm:col-span-2">
                 <label for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role name</label>
-                <input type="text" name="name" id="name"
+                <input type="text" name="name" id="name" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type role name">
             </div>
             <div class="sm:col-span-2">
                 <label for="description"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role description</label>
-                <input type="text" name="description" id="description"
+                <input type="text" name="description" id="description" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type role description">
             </div>

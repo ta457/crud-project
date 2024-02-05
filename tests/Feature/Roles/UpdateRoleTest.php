@@ -127,6 +127,6 @@ class UpdateRoleTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('roles', $data);
-        $response->assertRedirect(route('web.roles.show', $role->id));
+        $response->assertRedirect(route('web.roles.index'));
     }
 }

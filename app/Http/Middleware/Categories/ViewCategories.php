@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Categories;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class ViewCategories
+class ViewCategories extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class ViewCategories
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('view-categories')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('view-categories');
         return $next($request);
     }
 }

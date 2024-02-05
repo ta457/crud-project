@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Users;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteUser
+class DeleteUser extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class DeleteUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('delete-user')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('delete-user');
         return $next($request);
     }
 }

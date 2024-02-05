@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Products;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateProduct
+class CreateProduct extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class CreateProduct
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('create-product')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('create-product');
         return $next($request);
     }
 }

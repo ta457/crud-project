@@ -23,7 +23,7 @@ class CreateRoleTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_cannot_create_role_if_not_admin()
+    public function test_authenticated_user_cannot_create_role_if_not_allowed()
     {
         $user = User::factory()->create();
 
@@ -36,7 +36,7 @@ class CreateRoleTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_cannot_create_role_with_empty_name(): void
+    public function test_allowed_user_cannot_create_role_with_empty_name(): void
     {
         $user = User::find(1);
 
@@ -49,7 +49,7 @@ class CreateRoleTest extends TestCase
         $response->assertSessionHasErrors(['name' => 'Name khong duoc de trong']);
     }
 
-    public function test_admin_cannot_create_role_with_empty_description(): void
+    public function test_allowed_user_cannot_create_role_with_empty_description(): void
     {
         $user = User::find(1);
 
@@ -62,7 +62,7 @@ class CreateRoleTest extends TestCase
         $response->assertSessionHasErrors(['description' => 'Description khong duoc de trong']);
     }
 
-    public function test_admin_can_create_role()
+    public function test_allowed_user_can_create_role()
     {
         $user = User::find(1);
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Categories;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateCategory
+class CreateCategory extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,8 @@ class CreateCategory
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('create-category')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('create-category');
+
         return $next($request);
     }
 }

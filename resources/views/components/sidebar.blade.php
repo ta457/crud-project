@@ -30,20 +30,20 @@
                     <x-icons.user-icon />
                 </x-sidebar-item>
             @endif
-            
+
             @if ($user->hasPermission('view-categories'))
-                <x-sidebar-item 
-                    href="/categories" text="Categories" 
-                    :active="request()->routeIs('web.categories.index') || 
-                        request()->routeIs('web.categories.show') ||
-                        request()->routeIs('web.sub-categories.index') ||
-                        request()->routeIs('web.sub-categories.show')">
+                <x-sidebar-item href="/categories" text="Categories" :active="request()->routeIs('web.categories.index') ||
+                    request()->routeIs('web.categories.show') ||
+                    request()->routeIs('web.sub-categories.index') ||
+                    request()->routeIs('web.sub-categories.show')">
                     <x-icons.category-icon />
                 </x-sidebar-item>
             @endif
 
             @if ($user->hasPermission('view-products'))
-                <x-sidebar-item href="/products" text="Products" :active="request()->routeIs('web.products.index') || request()->routeIs('web.products.show')">
+                <x-sidebar-item href="/products" text="Products" :active="request()->routeIs('web.products.index') ||
+                    request()->routeIs('web.products.show') ||
+                    request()->routeIs('web.products.search')">
                     <x-icons.product-icon />
                 </x-sidebar-item>
             @endif

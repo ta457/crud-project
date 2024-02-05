@@ -100,7 +100,7 @@
     </div>
 
     @if ($user->hasPermission('create-product'))
-        <x-create-item-modal :route="$route" header="Add product" modalId="createProductModal">
+        <x-create-item-modal :route="$route" header="Add product" modalId="createProductModal" formId="createProd">
             <div class="sm:col-span-2">
                 <label for="sub_category_id"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product category</label>
@@ -150,7 +150,8 @@
 
         </x-create-item-modal>
 
-        <x-update-product-modal :subCategories="$subCategories" :user="$user"></x-update-product-modal>
+        <x-update-product-modal :subCategories="$subCategories" :user="$user">
+        </x-update-product-modal>
     @endif
 
     @if ($user->hasPermission('delete-product'))

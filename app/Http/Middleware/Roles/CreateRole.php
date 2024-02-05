@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Roles;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateRole
+class CreateRole extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class CreateRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('create-role')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('create-role');
         return $next($request);
     }
 }

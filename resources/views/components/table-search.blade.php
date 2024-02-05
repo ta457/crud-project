@@ -1,5 +1,5 @@
 <div class="flex items-center">
-    <form action="{{ $route }}/search" method="GET">
+    <form action="{{ $route }}/search" method="POST">
         @csrf
         <label for="title" class="sr-only">Search</label>
         <div class="relative w-full mr-4 flex">

@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
         ->name('web.permissions.show')
         ->middleware('view-permissions');
 
-    Route::get('/users/search', [UserController::class, 'search'])
+    Route::post('/users/search', [UserController::class, 'search'])
         ->name('web.users.search')
         ->middleware('view-users');
     Route::get('/users', [UserController::class, 'index'])
@@ -106,14 +106,11 @@ Route::middleware('auth')->group(function () {
         ->name('web.sub-categories.destroy')
         ->middleware('delete-category');
 
-    Route::get('/products/search', [ProductController::class, 'search'])
+    Route::post('/products/search', [ProductController::class, 'search'])
         ->name('web.products.search')
         ->middleware('view-products');
     Route::get('/products', [ProductController::class, 'index'])
         ->name('web.products.index')
-        ->middleware('view-products');
-    Route::get('/products/{product}', [ProductController::class, 'show'])
-        ->name('web.products.show')
         ->middleware('view-products');
     Route::post('/products', [ProductController::class, 'store'])
         ->name('web.products.store')

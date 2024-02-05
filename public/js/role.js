@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // uncheck the full-access checkbox when non-full-access checkbox is unchecked
+        // uncheck full-access checkbox when non-full-access checkbox is unchecked
         otherCheckboxes.forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 if (!checkbox.checked && fullAccessCheckbox.checked) {

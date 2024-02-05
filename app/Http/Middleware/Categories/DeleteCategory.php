@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Categories;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteCategory
+class DeleteCategory extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class DeleteCategory
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('delete-category')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('delete-category');
         return $next($request);
     }
 }

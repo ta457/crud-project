@@ -14,7 +14,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="{{ asset('js/base.js') }}"></script>
+    
 </head>
 
 <body class="font-sans antialiased flex">
@@ -40,5 +40,7 @@
             {{ $slot }}
         </main>
     </div>
+
+    <script src="{{ asset('js/base.js') }}"></script>
 </body>
 </html>

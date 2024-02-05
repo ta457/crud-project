@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware\Permissions;
 
+use App\Http\Middleware\Permission;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
-class ViewPermissions
+class ViewPermissions extends Permission
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,7 @@ class ViewPermissions
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Gate::allows('view-permissions')) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->checkGate('view-permissions');
         return $next($request);
     }
 }
