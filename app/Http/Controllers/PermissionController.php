@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePermissionRequest;
-use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-
+use App\Services\PermissionService;
 class PermissionController extends Controller
 {
+    protected $permService;
+
+    public function __construct(PermissionService $permService)
+    {
+        $this->permService = $permService;
+    }
+
     public function index()
     {
-        $permissions = Permission::paginate(10);
+        $permissions = $this->permService->getPermissions();
 
         $user = auth()->user();
 

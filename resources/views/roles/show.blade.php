@@ -40,43 +40,43 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="full-role-access"
-                                    @if ($role->hasAllPermissions($permsForRole))
+                                    @if ($role->hasAllPermissions($sortedPerms['role']))
                                         @checked(true)
                                     @endif>
                                 <label for="full-role-access" class="font-bold">Full Role Access</label>
-                                <x-permissions-row :perms="$permsForRole" :role="$role" />
+                                <x-permissions-row :perms="$sortedPerms['role']" :role="$role" />
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="full-perm-access"
-                                    @if ($role->hasAllPermissions($permsForPermission))
+                                    @if ($role->hasAllPermissions($sortedPerms['permission']))
                                         @checked(true)
                                     @endif>
                                 <label for="full-perm-access" class="font-bold">Full Permission Access</label>
-                                <x-permissions-row :perms="$permsForPermission" :role="$role" />
+                                <x-permissions-row :perms="$sortedPerms['permission']" :role="$role" />
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="full-user-access"
-                                    @if ($role->hasAllPermissions($permsForUser))
+                                    @if ($role->hasAllPermissions($sortedPerms['user']))
                                         @checked(true)
                                     @endif>
                                 <label for="full-user-access" class="font-bold">Full User Access</label>
-                                <x-permissions-row :perms="$permsForUser" :role="$role" />
+                                <x-permissions-row :perms="$sortedPerms['user']" :role="$role" />
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="full-cate-access"
-                                    @if ($role->hasAllPermissions($permsForCategory))
+                                    @if ($role->hasAllPermissions($sortedPerms['category']))
                                         @checked(true)
                                     @endif>
                                 <label for="full-cate-access" class="font-bold">Full Category Access</label>
-                                <x-permissions-row :perms="$permsForCategory" :role="$role" />
+                                <x-permissions-row :perms="$sortedPerms['category']" :role="$role" />
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="full-product-access"
-                                    @if ($role->hasAllPermissions($permsForProduct))
+                                    @if ($role->hasAllPermissions($sortedPerms['product']))
                                         @checked(true)
                                     @endif>
                                 <label for="full-product-access" class="font-bold">Full Product Access</label>
-                                <x-permissions-row :perms="$permsForProduct" :role="$role" />
+                                <x-permissions-row :perms="$sortedPerms['product']" :role="$role" />
                             </div>
                         </div>
                     </div>

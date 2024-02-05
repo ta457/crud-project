@@ -1,12 +1,3 @@
-function fetchData(url) {
-    return fetch(url)
-        .then(response => response.json())
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            throw error;
-        });
-}
-
 function showProduct(productId) {
     fetchData( `http://localhost:8088/api/products/${productId}`)
         .then(data => {

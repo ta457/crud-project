@@ -6,46 +6,34 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\PermissionService;
 use App\Services\RoleService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
     protected $roleService;
+    protected $permService;
 
-    public function __construct(RoleService $roleService)
+    public function __construct(RoleService $roleService, PermissionService $permService)
     {
         $this->roleService = $roleService;
+        $this->permService = $permService;
     }
 
     public function index()
     {
-        $roles = Role::paginate(10);
+        $roles = $this->roleService->getLatestRoles();
 
         $user = auth()->user();
 
-        $permsForRole = Permission::permsForRole()->get();
-        $permsForPermission = Permission::permsForPermission()->get();
-        $permsForUser = Permission::permsForUser()->get();
-        $permsForCategory = Permission::permsForCategory()->get();
-        $permsForProduct = Permission::permsForProduct()->get();
+        $sortedPerms = $this->permService->getSortedPerms();
 
-        return view(
-            'roles.index', 
-            compact('roles', 'user', 'permsForRole', 'permsForPermission', 'permsForUser', 'permsForCategory', 'permsForProduct')
-        );
+        return view('roles.index', compact('roles', 'user', 'sortedPerms'));
     }
 
     public function store(StoreRoleRequest $request)
     {
-        $role = Role::create($request->validated());
-
-        if ($request->has('selected')) {
-            $selectedPermIds = $request->input('selected', []);
-            $selectedPermissions = Permission::whereIn('id', $selectedPermIds)->get();
-            $role->permissions()->sync($selectedPermissions);
-        }
+        $this->roleService->storeRole($request);
 
         return redirect()->route('web.roles.index');
     }
@@ -58,32 +46,22 @@ class RoleController extends Controller
 
         $user = auth()->user();
 
-        $permsForRole = Permission::permsForRole()->get();
-        $permsForPermission = Permission::permsForPermission()->get();
-        $permsForUser = Permission::permsForUser()->get();
-        $permsForCategory = Permission::permsForCategory()->get();
-        $permsForProduct = Permission::permsForProduct()->get();
+        $sortedPerms = $this->permService->getSortedPerms();
 
-        $role->hasAllPermissions($permsForProduct);
-
-        return view(
-            'roles.show', 
-            compact('role', 'user', 'permsForRole', 'permsForPermission', 'permsForUser', 'permsForCategory', 'permsForProduct')
-        );
+        return view('roles.show',compact('role', 'user', 'sortedPerms'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        
         $this->roleService->updateRole($request, $role);
-
-        return redirect()->route('web.roles.show', $role->id);
+        
+        return redirect()->route('web.roles.index');
     }
 
     public function destroy(Role $role)
     {
-        if ($role->id !== 1) {
-            $role->delete();
-        }
+        $this->roleService->deleteRole($role);
 
         return redirect()->route('web.roles.index');
     }

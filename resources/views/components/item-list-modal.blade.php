@@ -22,16 +22,9 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                    {{ $slot }}
-                </div>
-                <button type="submit"
-                    class="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Add
-                </button>
-            </form>
+            <div class="">
+                {{ $slot }}
+            </div>
         </div>
     </div>
 </div>

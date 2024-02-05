@@ -14,19 +14,18 @@
             <div class="overflow-hidden">
                 <div class="text-gray-900 dark:text-gray-100">
 
-                    <x-table :head="['ID', 'Name', 'Description']">
+                    <x-table :head="['Order', 'Name', 'Description']">
                         @php $route = '/permissions'; @endphp
 
-                        <x-slot name="search">
-                        </x-slot>
-
+                        @php $count = 1; @endphp
                         <x-slot name="tbody">
                             @foreach ($permissions as $permission)
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
-                                    <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->id" />
+                                    <x-table-cell :route="$route.'/'.$permission->id" :data="$count" />
                                     <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->name" />
                                     <x-table-cell :route="$route.'/'.$permission->id" :data="$permission->description" />
                                 </tr>
+                                @php $count++; @endphp
                             @endforeach
                         </x-slot>
 

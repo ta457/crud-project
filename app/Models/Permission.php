@@ -40,4 +40,15 @@ class Permission extends Model
     {
         return $query->where('name', 'like', '%product%');
     }
+
+    public function getSortedPermsAttribute()
+    {
+        return [
+            'role' => $this->permsForRole()->get(),
+            'permission' => $this->permsForPermission()->get(),
+            'user' => $this->permsForUser()->get(),
+            'category' => $this->permsForCategory()->get(),
+            'product' => $this->permsForProduct()->get(),
+        ];
+    }
 }

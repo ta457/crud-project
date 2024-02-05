@@ -93,19 +93,16 @@ Route::middleware('auth')->group(function () {
         ->name('web.categories.destroy')
         ->middleware('delete-category');
 
-    Route::get('/categories/{category}/sub-categories', [SubCategoryController::class, 'index'])
-        ->name('web.sub-categories.index')
-        ->middleware('view-categories');
-    Route::get('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'show'])
+    Route::get('/sub-categories/{subCategory}', [SubCategoryController::class, 'show'])
         ->name('web.sub-categories.show')
         ->middleware('view-categories');
-    Route::post('/categories/{category}/sub-categories', [SubCategoryController::class, 'store'])
+    Route::post('/sub-categories', [SubCategoryController::class, 'store'])
         ->name('web.sub-categories.store')
         ->middleware('create-category');
-    Route::patch('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])
+    Route::patch('/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])
         ->name('web.sub-categories.update')
         ->middleware('update-category');
-    Route::delete('/categories/{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])
+    Route::delete('/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])
         ->name('web.sub-categories.destroy')
         ->middleware('delete-category');
 

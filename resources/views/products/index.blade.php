@@ -14,7 +14,9 @@
 
         @if ($user->hasPermission('create-product'))
             <div>
-                <x-create-item-btn>New product</x-create-item-btn>
+                <x-create-item-btn btnId="createProductModalBtn" modalId="createProductModal">
+                    New product
+                </x-create-item-btn>
             </div>
         @endif
     </x-slot>
@@ -24,7 +26,7 @@
             <div class="overflow-hidden">
                 <div class="text-gray-900 dark:text-gray-100">
 
-                    <x-table :head="['ID', 'Category', 'Name', 'Description', 'Price', 'Qty']">
+                    <x-table :head="['Order', 'Category', 'Name', 'Description', 'Price', 'Qty']">
 
                         <x-slot name="search">
                             <x-table-search :route="$route">
@@ -40,6 +42,7 @@
                         </x-slot>
 
                         <x-slot name="tbody">
+                            @php $count = 1; @endphp
                             @foreach ($products as $product)
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
                                     <td>
@@ -82,6 +85,7 @@
                                         <x-table-row-delete-btn :route="$route" :id="$product->id" />
                                     @endif
                                 </tr>
+                                @php $count++; @endphp
                             @endforeach
                         </x-slot>
 
@@ -96,7 +100,7 @@
     </div>
 
     @if ($user->hasPermission('create-product'))
-        <x-create-item-modal :route="$route" header="Add product">
+        <x-create-item-modal :route="$route" header="Add product" modalId="createProductModal">
             <div class="sm:col-span-2">
                 <label for="sub_category_id"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product category</label>
@@ -149,9 +153,9 @@
         <x-update-product-modal :subCategories="$subCategories" :user="$user"></x-update-product-modal>
     @endif
 
-    <script src="{{ asset('js/product.js') }}"></script>
-
     @if ($user->hasPermission('delete-product'))
         <x-delete-modal />
     @endif
+
+    <script src="{{ asset('js/product.js') }}"></script>
 </x-app-layout>

@@ -14,14 +14,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script>
-        function changeDeleteFormAction(url, id) {
-            var form = document.getElementById('deleteRecordForm');
-            var deleteMessage = document.getElementById('deleteMessage');
-            form.action = url + id;
-            deleteMessage.textContent = 'ID = ' + id;
-        }
-    </script>
+    <script src="{{ asset('js/base.js') }}"></script>
 </head>
 
 <body class="font-sans antialiased flex">
@@ -48,6 +41,4 @@
         </main>
     </div>
 </body>
-
-
 </html>

@@ -36,7 +36,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Name khong duoc de trong',
-            'description.required' => 'Description khong duoc de trong',
+            'description.required' => 'Description khong duoc de trong'
         ];
     }
 }

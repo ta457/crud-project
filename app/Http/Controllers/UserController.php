@@ -7,16 +7,18 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     protected $userService;
+    protected $roleService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, RoleService $roleService)
     {
         $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     public function index()
@@ -24,7 +26,7 @@ class UserController extends Controller
         $users = $this->userService->getLatestUsers();
 
         $currentUser = auth()->user();
-        $roles = Role::all()->except(1);
+        $roles = $this->roleService->getAllExceptAdmin();
 
         return view('users.index', compact('users', 'currentUser', 'roles'));
     }
@@ -42,7 +44,7 @@ class UserController extends Controller
             return redirect()->route('web.users.index');
         }
 
-        $roles = Role::all()->except(1);
+        $roles = $this->roleService->getAllExceptAdmin();
         $currentUser = auth()->user();
 
         return view('users.show', compact('user', 'roles', 'currentUser'));
@@ -67,7 +69,7 @@ class UserController extends Controller
         $users = $this->userService->search($request->input('search'));
 
         $currentUser = auth()->user();
-        $roles = Role::all()->except(1);
+        $roles = $this->roleService->getAllExceptAdmin();
 
         return view('users.index', compact('users', 'currentUser', 'roles'));
     }

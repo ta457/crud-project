@@ -3,9 +3,11 @@ function fetchData(url) {
         .then(response => response.json())
         .catch(error => {
             console.error('Error fetching data:', error);
-            throw error; // Re-throw the error to handle it later if needed
+            throw error;
         });
 }
 
-
-export { fetchData };
+function changeDeleteFormAction(url, id) {
+    var form = document.getElementById('deleteRecordForm');
+    form.action = url + id;
+}

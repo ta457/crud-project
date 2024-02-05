@@ -4,48 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\SubCategory;
+use App\Services\ProductService;
+use App\Services\SubCategoryService;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class ProductController extends Controller
 {
-    public function index()
+    protected $prodService;
+    protected $subCateService;
+
+    public function __construct(ProductService $prodService, SubCategoryService $subCateService)
     {
-        $categories = Category::all();
-
-        $subCategories = SubCategory::all();
-
-        $products = Product::with('subCategory')->paginate(10);
-
-        $user = auth()->user();
-
-        return view('products.index', compact('products', 'user', 'categories', 'subCategories'));
+        $this->prodService = $prodService;
+        $this->subCateService = $subCateService;
     }
 
-    public function show(Product $product)
+    public function index()
     {
-        $categories = Category::all();
+        $subCategories = $this->subCateService->getAll();
+
+        $products = $this->prodService->getLatestProducts();
 
         $user = auth()->user();
 
-        return view('products.show', compact('product', 'user', 'categories'));
+        return view('products.index', compact('products', 'user', 'subCategories'));
     }
 
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->validated());
+        $product = $this->prodService->storeProduct($request);
 
         if ($request->file('img')) {
-            $manager = new ImageManager(new Driver());
-            $imageName = 'prodId_' . $product->id . '_' . $request->file('img')->getClientOriginalName();
-            $img = $manager->read($request->file('img'))->resize(300, 300);
-            $img->save(base_path('public/images/products/' . $imageName));
-            $product->img = $imageName;
-            $product->save();
+            $this->prodService->storeProductImage($request->file('img'), $product);
         }
 
         return redirect()->route('web.products.index');
@@ -53,38 +44,20 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // delete this product image
-        if (
-            $product->img !== null &&
-            file_exists(base_path('public/images/products/' . $product->img))
-        ) {
-            unlink(base_path('public/images/products/' . $product->img));
-        }
+        $this->prodService->deleteProductImage($product);
 
-        $product->delete();
+        $this->prodService->deleteProduct($product->id);
 
         return redirect()->route('web.products.index');
     }
 
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $this->prodService->updateProduct($request, $product);
 
         if ($request->file('img')) {
-            // delete this product current image
-            if (
-                $product->img !== null &&
-                file_exists(base_path('public/images/products/' . $product->img))
-            ) {
-                unlink(base_path('public/images/products/' . $product->img));
-            }
-
-            $manager = new ImageManager(new Driver());
-            $imageName = 'prodId_' . $product->id . '_' . $request->file('img')->getClientOriginalName();
-            $img = $manager->read($request->file('img'))->resize(300, 300);
-            $img->save(base_path('public/images/products/' . $imageName));
-            $product->img = $imageName;
-            $product->save();
+            $this->prodService->deleteProductImage($product);
+            $this->prodService->storeProductImage($request->file('img'), $product);
         }
 
         return redirect()->route('web.products.index');
@@ -92,17 +65,12 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $searchKeyword = $request->input('search');
-        $searchCategory = $request->input('sub_category_id');
-
-        $products = Product::search($searchKeyword, $searchCategory)->paginate(10);
+        $products = $this->prodService->search($request->input('search'), $request->input('sub_category_id'));
 
         $user = auth()->user();
 
-        $categories = Category::all();
+        $subCategories = $this->subCateService->getAll();
 
-        $subCategories = SubCategory::all();
-
-        return view('products.index', compact('products', 'user', 'categories', 'subCategories'));
+        return view('products.index', compact('products', 'user', 'subCategories'));
     }
 }
