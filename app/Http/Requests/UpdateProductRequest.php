@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePermissionRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,11 @@ class UpdatePermissionRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'sub_category_id' => 'required',
             'description' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+            'img' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -36,7 +40,10 @@ class UpdatePermissionRequest extends FormRequest
     {
         return [
             'name.required' => 'Vui long nhap ten',
+            'sub_category_id.required' => 'Vui long chon danh muc',
             'description.required' => 'Vui long nhap mo ta',
+            'price.required' => 'Vui long nhap gia',
+            'quantity.required' => 'Vui long nhap so luong',
         ];
     }
 }

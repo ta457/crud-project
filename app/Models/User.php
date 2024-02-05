@@ -63,6 +63,10 @@ class User extends Authenticatable
 
     public function hasPermission($permissionName)
     {
+        if ($this->hasRole('super-admin')) {
+            return true;
+        }
+
         $roles = $this->roles;
 
         $permission = Permission::where('name', $permissionName)->first();
@@ -72,5 +76,16 @@ class User extends Authenticatable
                 return true;
             }
         }
+
+        return false;
+    }
+    
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('name', 'like', "%$keyword%")
+            ->orWhere('email', 'like', "%$keyword%")
+            ->orWhereHas('roles', function ($query) use ($keyword) {
+                $query->where('name', 'like', "%$keyword%");
+            });
     }
 }

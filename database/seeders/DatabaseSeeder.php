@@ -4,8 +4,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
 use App\Models\Permission;
+use App\Models\Product;
 use App\Models\Role;
+use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +19,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // create super admin & user roles ======================================
+
+        $supAdminRole = Role::create([
+            'name' => 'super-admin',
+            'description' => 'super admin'
+        ]);
+
+        $userRole = Role::create([
+            'name' => 'user',
+            'description' => 'user'
+        ]);
+
         // create super admin & user accounts ====================================
 
         $admin = User::factory()->create([
@@ -28,18 +43,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@gmail.com',
             'password' => '11111111'
-        ]);
-
-        // create super admin & user roles ======================================
-
-        $supAdminRole = Role::create([
-            'name' => 'super-admin',
-            'description' => 'super admin'
-        ]);
-
-        $userRole = Role::create([
-            'name' => 'user',
-            'description' => 'user'
         ]);
 
         // create permissions ====================================================
@@ -65,18 +68,6 @@ class DatabaseSeeder extends Seeder
         $viewPerm = Permission::create([
             'name' => 'view-permissions',
             'description' => 'can view permission list'
-        ]);
-        $createPerm = Permission::create([
-            'name' => 'create-permission',
-            'description' => 'can create permission'
-        ]);
-        $updatePerm = Permission::create([
-            'name' => 'update-permission',
-            'description' => 'can update permission'
-        ]);
-        $deletePerm = Permission::create([
-            'name' => 'delete-permission',
-            'description' => 'can delete permission'
         ]);
 
         // user CRUD permissions
@@ -147,5 +138,46 @@ class DatabaseSeeder extends Seeder
             $updateProd->id,
             $deleteProd->id
         ]);
+
+        // create categories ========================================================
+
+        $category1 = Category::create([
+            'name' => 'Meat',
+            'description' => 'Meat description'
+        ]);
+
+        $category2 = Category::create([
+            'name' => 'Fruit',
+            'description' => 'Fruit description'
+        ]);
+
+        // create sub categories ====================================================
+
+        $category1->subCategories()->create([
+            'name' => 'Beef',
+            'description' => 'Beef description'
+        ]);
+
+        $category1->subCategories()->create([
+            'name' => 'Chicken',
+            'description' => 'Chicken description'
+        ]);
+
+        $category2->subCategories()->create([
+            'name' => 'Apple',
+            'description' => 'Apple description'
+        ]);
+
+        $category2->subCategories()->create([
+            'name' => 'Orange',
+            'description' => 'Orange description'
+        ]);
+        
+        foreach (SubCategory::all() as $subCategory)
+        {
+            Product::factory(2)->create([
+                'sub_category_id' => $subCategory->id
+            ]);
+        }
     }
 }

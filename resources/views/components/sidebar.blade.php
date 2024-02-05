@@ -13,31 +13,36 @@
 
         @php $user = auth()->user(); @endphp
         <ul class="space-y-2 border-t border-gray-700 dark:border-gray-700 pt-5">
-            @if ($user->hasRole('super-admin') || $user->hasPermission('view-roles'))
+            @if ($user->hasPermission('view-roles'))
                 <x-sidebar-item href="/roles" text="Roles" :active="request()->routeIs('web.roles.index') || request()->routeIs('web.roles.show')">
                     <x-icons.role-icon />
                 </x-sidebar-item>
             @endif
 
-            @if ($user->hasRole('super-admin') || $user->hasPermission('view-permissions'))
+            @if ($user->hasPermission('view-permissions'))
                 <x-sidebar-item href="/permissions" text="Permissions" :active="request()->routeIs('web.permissions.index') || request()->routeIs('web.permissions.show')">
                     <x-icons.permission-icon />
                 </x-sidebar-item>
             @endif
 
-            @if ($user->hasRole('super-admin') || $user->hasPermission('view-users'))
+            @if ($user->hasPermission('view-users'))
                 <x-sidebar-item href="/users" text="Users" :active="request()->routeIs('web.users.index') || request()->routeIs('web.users.show')">
                     <x-icons.user-icon />
                 </x-sidebar-item>
             @endif
             
-            @if ($user->hasRole('super-admin') || $user->hasPermission('view-categories'))
-                <x-sidebar-item href="/categories" text="Categories" :active="request()->routeIs('web.categories.index') || request()->routeIs('web.categories.show')">
+            @if ($user->hasPermission('view-categories'))
+                <x-sidebar-item 
+                    href="/categories" text="Categories" 
+                    :active="request()->routeIs('web.categories.index') || 
+                        request()->routeIs('web.categories.show') ||
+                        request()->routeIs('web.sub-categories.index') ||
+                        request()->routeIs('web.sub-categories.show')">
                     <x-icons.category-icon />
                 </x-sidebar-item>
             @endif
 
-            @if ($user->hasRole('super-admin') || $user->hasPermission('view-products'))
+            @if ($user->hasPermission('view-products'))
                 <x-sidebar-item href="/products" text="Products" :active="request()->routeIs('web.products.index') || request()->routeIs('web.products.show')">
                     <x-icons.product-icon />
                 </x-sidebar-item>

@@ -6,22 +6,34 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Services\PermissionService;
+use App\Services\RoleService;
 
 class RoleController extends Controller
 {
+    protected $roleService;
+    protected $permService;
+
+    public function __construct(RoleService $roleService, PermissionService $permService)
+    {
+        $this->roleService = $roleService;
+        $this->permService = $permService;
+    }
+
     public function index()
     {
-        $roles = Role::paginate(10);
+        $roles = $this->roleService->getLatestRoles();
 
         $user = auth()->user();
 
-        return view('roles.index', compact('roles', 'user'));
+        $sortedPerms = $this->permService->getSortedPerms();
+
+        return view('roles.index', compact('roles', 'user', 'sortedPerms'));
     }
 
     public function store(StoreRoleRequest $request)
     {
-        Role::create($request->validated());
+        $this->roleService->storeRole($request);
 
         return redirect()->route('web.roles.index');
     }
@@ -34,33 +46,22 @@ class RoleController extends Controller
 
         $user = auth()->user();
 
-        $permissions = Permission::all();
+        $sortedPerms = $this->permService->getSortedPerms();
 
-        return view('roles.show', compact('role', 'user', 'permissions'));
+        return view('roles.show',compact('role', 'user', 'sortedPerms'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        if ($role->id === 1) {
-            return redirect()->route('web.roles.index');
-        }
-
-        $role->update($request->validated());
-
-        if ($request->has('selected')) {
-            $selectedPermIds = $request->input('selected', []);
-            $selectedPermissions = Permission::whereIn('id', $selectedPermIds)->get();
-            $role->permissions()->sync($selectedPermissions);
-        }
-
-        return redirect()->route('web.roles.show', $role->id);
+        
+        $this->roleService->updateRole($request, $role);
+        
+        return redirect()->route('web.roles.index');
     }
 
     public function destroy(Role $role)
     {
-        if ($role->id !== 1) {
-            $role->delete();
-        }
+        $this->roleService->deleteRole($role);
 
         return redirect()->route('web.roles.index');
     }

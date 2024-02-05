@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\MustBeAdmin;
 
 class Kernel extends HttpKernel
 {
@@ -64,5 +65,27 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'view-roles' => \App\Http\Middleware\Roles\ViewRoles::class,
+        'create-role' => \App\Http\Middleware\Roles\CreateRole::class,
+        'update-role' => \App\Http\Middleware\Roles\UpdateRole::class,
+        'delete-role' => \App\Http\Middleware\Roles\DeleteRole::class,
+
+        'view-permissions' => \App\Http\Middleware\Permissions\ViewPermissions::class,
+
+        'view-users' => \App\Http\Middleware\Users\ViewUsers::class,
+        'create-user' => \App\Http\Middleware\Users\CreateUser::class,
+        'update-user' => \App\Http\Middleware\Users\UpdateUser::class,
+        'delete-user' => \App\Http\Middleware\Users\DeleteUser::class,
+
+        'view-categories' => \App\Http\Middleware\Categories\ViewCategories::class,
+        'create-category' => \App\Http\Middleware\Categories\CreateCategory::class,
+        'update-category' => \App\Http\Middleware\Categories\UpdateCategory::class,
+        'delete-category' => \App\Http\Middleware\Categories\DeleteCategory::class,
+
+        'view-products' => \App\Http\Middleware\Products\ViewProducts::class,
+        'create-product' => \App\Http\Middleware\Products\CreateProduct::class,
+        'update-product' => \App\Http\Middleware\Products\UpdateProduct::class,
+        'delete-product' => \App\Http\Middleware\Products\DeleteProduct::class,
     ];
 }
