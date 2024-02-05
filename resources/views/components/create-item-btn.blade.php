@@ -1,4 +1,5 @@
-<button type="button" id="createItemModalBtn" data-modal-target="createItemModal" data-modal-toggle="createItemModal"
+<button type="button" 
+    id="{{ $btnId }}" data-modal-target="{{ $modalId }}" data-modal-toggle="{{ $modalId }}"
     class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
     <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true">

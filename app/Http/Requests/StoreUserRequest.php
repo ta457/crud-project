@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Gmail;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -23,7 +24,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required',
+            'email' => ['required', 'email', new Gmail],
             'password' => 'required'
         ];
     }

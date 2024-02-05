@@ -103,6 +103,4 @@
             </div>
         </div>
     </div>
-
-    <x-products-script />
 </x-app-layout>

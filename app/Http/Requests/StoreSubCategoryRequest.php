@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePermissionRequest extends FormRequest
+class StoreSubCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,7 @@ class StorePermissionRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'required',
+            'category_id' => 'required'
         ];
     }
 
@@ -35,8 +36,9 @@ class StorePermissionRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Vui long nhap ten',
-            'description.required' => 'Vui long nhap mo ta',
+            'name.required' => 'Name khong duoc de trong',
+            'description.required' => 'Description khong duoc de trong',
+            'category_id.required' => 'Category khong duoc de trong'
         ];
     }
 }

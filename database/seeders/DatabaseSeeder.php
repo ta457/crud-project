@@ -69,18 +69,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'view-permissions',
             'description' => 'can view permission list'
         ]);
-        $createPerm = Permission::create([
-            'name' => 'create-permission',
-            'description' => 'can create permission'
-        ]);
-        $updatePerm = Permission::create([
-            'name' => 'update-permission',
-            'description' => 'can update permission'
-        ]);
-        $deletePerm = Permission::create([
-            'name' => 'delete-permission',
-            'description' => 'can delete permission'
-        ]);
 
         // user CRUD permissions
         $viewUser = Permission::create([

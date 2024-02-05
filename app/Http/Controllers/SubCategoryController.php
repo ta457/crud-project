@@ -2,48 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Requests\StoreSubCategoryRequest;
 use App\Models\Category;
 use App\Models\SubCategory;
-use Illuminate\Http\Request;
+use App\Services\CategoryService;
+use App\Services\SubCategoryService;
 
 class SubCategoryController extends Controller
 {
-    public function index(Category $category)
-    {
-        $subCategories = $category->subCategories()->paginate(10);
+    protected $cateService;
+    protected $subCateService;
 
+    public function __construct(CategoryService $cateService, SubCategoryService $subCateService)
+    {
+        $this->cateService = $cateService;
+        $this->subCateService = $subCateService;
+    }
+
+    public function show(SubCategory $subCategory)
+    {
         $user = auth()->user();
 
-        return view('subCategories.index', compact('subCategories', 'user', 'category'));
+        $categories = $this->cateService->getAll();
+
+        return view('subCategories.show', compact('subCategory','user','categories'));
     }
 
-    public function show(Category $category, SubCategory $subCategory)
+    public function store(StoreSubCategoryRequest $request)
     {
-        $user = auth()->user();
+        $this->subCateService->storeSubCategory($request);
 
-        return view('subCategories.show', compact('subCategory', 'user', 'category'));
+        return redirect()->route('web.categories.index');
     }
 
-    public function store(Category $category, StoreCategoryRequest $request)
+    public function destroy(SubCategory $subCategory)
     {
-        $category->subCategories()->create($request->validated());
+        $this->subCateService->deleteSubCategory($subCategory);
 
-        return redirect()->route('web.sub-categories.index', $category->id);
+        return redirect()->route('web.categories.index');
     }
 
-    public function destroy(Category $category, SubCategory $subCategory)
+    public function update(SubCategory $subCategory, StoreSubCategoryRequest $request)
     {
-        $subCategory->delete();
+        $this->subCateService->updateSubCategory($subCategory, $request);
 
-        return redirect()->route('web.sub-categories.index', $category->id);
-    }
-
-    public function update(Category $category, SubCategory $subCategory, UpdateCategoryRequest $request)
-    {
-        $subCategory->update($request->validated());
-
-        return redirect()->route('web.sub-categories.show', [$category->id, $subCategory->id]);
+        return redirect()->route('web.categories.index');
     }
 }
