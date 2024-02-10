@@ -12,4 +12,19 @@ class CategoryRepository extends BaseRepository
     {
         return Category::class;
     }
+
+    public function getAll()
+    {
+        return $this->model->all();
+    }
+
+    public function getLatestCategories()
+    {
+        return $this->model->latest()->paginate(10);
+    }
+
+    public function getGroups()
+    {
+        return $this->model->select('group')->distinct()->get();
+    }
 }

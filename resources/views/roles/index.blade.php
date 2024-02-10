@@ -1,6 +1,6 @@
-@php
-    $route = '/roles';
-@endphp
+<script src="{{ asset('js/role.js') }}" defer></script>
+
+@php $route =  route('web.roles.index'); @endphp
 
 <x-app-layout>
     <x-slot name="sidebar">
@@ -12,7 +12,7 @@
             {{ __('Roles') }}
         </h2>
 
-        @if ($user->hasPermission('create-role'))
+        @userCan('create-role')
             <div>
                 <x-create-item-btn btnId="createRoleModalBtn" modalId="createRoleModal">
                     New role
@@ -38,8 +38,8 @@
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$count" />
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->name" />
                                     <x-table-cell :route="$route.'/'.$role->id" :data="$role->description" />
-                                    @if ($user->hasPermission('delete-role'))
-                                        <x-table-row-delete-btn :route="$route" :id="$role->id" />
+                                    @userCan('delete-role')
+                                        <x-table-row-delete-btn :route="$route" :dataId="$role->id" />
                                     @endif
                                     @php $count++; @endphp
                                 </tr>
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    @if ($user->hasPermission('create-role'))
+    @userCan('create-role')
         <x-create-item-modal :route="$route" header="Add role" modalId="createRoleModal" formId="createRole">
             <div class="sm:col-span-2">
                 <label for="name"
@@ -106,9 +106,7 @@
         </x-create-item-modal>
     @endif
 
-    @if ($user->hasPermission('delete-role'))
+    @userCan('delete-role')
         <x-delete-modal />
     @endif
-
-    <script src="{{ asset('js/role.js') }}"></script>
 </x-app-layout>

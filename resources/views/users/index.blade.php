@@ -8,7 +8,7 @@
             {{ __('Users') }}
         </h2>
 
-        @if ($currentUser->hasPermission('create-user'))
+        @userCan('create-user')
             <div class="">
                 <x-create-item-btn btnId="createUserModalBtn" modalId="createUserModal">
                     New user
@@ -37,8 +37,8 @@
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->name" />
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->email" />
                                     <x-table-cell :route="$route.'/'.$user->id" :data="$user->roleNameList"></x-table-cell>
-                                    @if ($currentUser->hasPermission('delete-user'))
-                                        <x-table-row-delete-btn :route="$route" :id="$user->id" />
+                                    @userCan('delete-user')
+                                        <x-table-row-delete-btn :route="$route" :dataId="$user->id" />
                                     @endif
                                 </tr>
                                 @php $count++; @endphp
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    @if ($currentUser->hasPermission('create-user'))
+    @userCan('create-user')
         <x-create-item-modal :route="$route" header="Add user" modalId="createUserModal" formId="createUser">
             <div class="sm:col-span-2">
                 <label for="name"
@@ -95,7 +95,7 @@
         </x-create-item-modal>
     @endif
 
-    @if ($currentUser->hasPermission('delete-user'))
+    @userCan('delete-user')
         <x-delete-modal />
     @endif
 </x-app-layout>

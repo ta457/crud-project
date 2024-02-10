@@ -34,7 +34,7 @@ class UpdateRoleTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_cannot_update_role_if_not_admin()
+    public function test_authenticated_user_cannot_update_role_if_not_allowed()
     {
         $user = User::factory()->create();
 
@@ -58,7 +58,7 @@ class UpdateRoleTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_cannot_update_role_with_empty_name(): void
+    public function test_allowed_user_cannot_update_role_with_empty_name(): void
     {
         $user = User::find(1);
 
@@ -82,7 +82,7 @@ class UpdateRoleTest extends TestCase
         $response->assertSessionHasErrors(['name' => 'Vui long nhap ten']);
     }
 
-    public function test_admin_cannot_update_role_with_empty_description(): void
+    public function test_allowed_user_cannot_update_role_with_empty_description(): void
     {
         $user = User::find(1);
 
@@ -106,7 +106,7 @@ class UpdateRoleTest extends TestCase
         $response->assertSessionHasErrors(['description' => 'Vui long nhap mo ta']);
     }
 
-    public function test_admin_can_update_role()
+    public function test_allowed_user_can_update_role()
     {
         $user = User::find(1);
 

@@ -5,19 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Services\CategoryService;
 use App\Services\ProductService;
-use App\Services\SubCategoryService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     protected $prodService;
-    protected $subCateService;
+    protected $cateService;
 
-    public function __construct(ProductService $prodService, SubCategoryService $subCateService)
+    public function __construct(ProductService $prodService, CategoryService $cateService)
     {
         $this->prodService = $prodService;
-        $this->subCateService = $subCateService;
+        $this->cateService = $cateService;
     }
 
     public function index($products = null)
@@ -26,11 +26,9 @@ class ProductController extends Controller
             $products = $this->prodService->getLatestProducts();
         }
 
-        $user = auth()->user();
+        $categories = $this->cateService->getAll();
 
-        $subCategories = $this->subCateService->getAll();
-
-        return view('products.index', compact('products', 'user', 'subCategories'));
+        return view('products.index', compact('products','categories'));
     }
 
     public function store(StoreProductRequest $request)
@@ -48,7 +46,7 @@ class ProductController extends Controller
     {
         $this->prodService->deleteProductImage($product);
 
-        $this->prodService->deleteProduct($product->id);
+        $this->prodService->deleteProduct($product);
 
         return redirect()->route('web.products.index');
     }
@@ -67,7 +65,7 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $products = $this->prodService->search($request->input('search'), $request->input('sub_category_id'));
+        $products = $this->prodService->search($request->search, $request->category_id);
 
         return $this->index($products);
     }

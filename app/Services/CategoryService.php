@@ -15,9 +15,19 @@ class CategoryService
         $this->cateRepo = $cateRepo;
     }
 
+    public function getGroups()
+    {
+        return $this->cateRepo->getGroups();
+    }
+
     public function getAll()
     {
-        return $this->cateRepo->all();
+        return $this->cateRepo->getAll();
+    }
+
+    public function getLatestCategories()
+    {
+        return $this->cateRepo->getLatestCategories();
     }
 
     public function storeCategory(StoreCategoryRequest $request)

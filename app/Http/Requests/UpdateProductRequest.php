@@ -23,7 +23,7 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'sub_category_id' => 'required',
+            'category_id' => 'required',
             'description' => 'required',
             'price' => 'required',
             'quantity' => 'required',
@@ -40,7 +40,7 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'name.required' => 'Vui long nhap ten',
-            'sub_category_id.required' => 'Vui long chon danh muc',
+            'category_id.required' => 'Vui long chon danh muc',
             'description.required' => 'Vui long nhap mo ta',
             'price.required' => 'Vui long nhap gia',
             'quantity.required' => 'Vui long nhap so luong',

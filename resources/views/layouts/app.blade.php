@@ -14,6 +14,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script src="{{ asset('js/base.js') }}" defer></script>
     
 </head>
 
@@ -40,7 +42,5 @@
             {{ $slot }}
         </main>
     </div>
-
-    <script src="{{ asset('js/base.js') }}"></script>
 </body>
 </html>

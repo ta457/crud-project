@@ -19,9 +19,9 @@ class ProductRepository extends BaseRepository
         return $this->model->latest()->paginate(10);
     }
 
-    public function getProductsBySubCate($subCateId)
+    public function getProductsByCate($cateId)
     {
-        return $this->model->where('sub_category_id', $subCateId)->paginate(10);
+        return $this->model->where('category_id', $cateId)->paginate(10);
     }
 
     public function storeProductImage($file, Product $product)
@@ -44,8 +44,8 @@ class ProductRepository extends BaseRepository
         }
     }
 
-    public function search($searchKeyword, $subCateId = null)
+    public function search($searchKeyword, $cateId = null)
     {
-        return $this->model->search($searchKeyword, $subCateId)->paginate(10);
+        return $this->model->search($searchKeyword, $cateId)->paginate(10);
     }
 }

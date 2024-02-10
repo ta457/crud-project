@@ -21,9 +21,9 @@ class ProductService
         return $this->productRepo->getLatestProducts();
     }
 
-    public function getProductsBySubCate($subCateId)
+    public function getProductsByCate($cateId)
     {
-        return $this->productRepo->getProductsBySubCate($subCateId);
+        return $this->productRepo->getProductsByCate($cateId);
     }
 
     public function storeProduct(StoreProductRequest $request)
@@ -41,9 +41,9 @@ class ProductService
         return $this->productRepo->delete($product->id);
     }
 
-    public function search($searchKeyword, $subCateId = null)
+    public function search($searchKeyword, $cateId = null)
     {
-        return $this->productRepo->search($searchKeyword, $subCateId);
+        return $this->productRepo->search($searchKeyword, $cateId);
     }
 
     public function storeProductImage($file, Product $product)
