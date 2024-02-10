@@ -40,6 +40,8 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        //dd($user->toArray());
+
         if ($user->hasRole('super-admin')) {
             return redirect()->route('web.users.index');
         }

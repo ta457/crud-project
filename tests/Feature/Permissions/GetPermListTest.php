@@ -10,8 +10,6 @@ use Tests\TestCase;
 
 class GetPermListTest extends TestCase
 {
-    use WithFaker;
-
     public function test_unauthenticated_user_cannot_get_perm_list()
     {
         $response = $this->get(route('web.permissions.index'));
@@ -19,7 +17,7 @@ class GetPermListTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_cannot_get_perm_list_if_not_admin()
+    public function test_authenticated_user_cannot_get_perm_list_if_not_allowed()
     {
         $user = User::factory()->create();
 
@@ -28,7 +26,7 @@ class GetPermListTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_get_perm_list()
+    public function test_allowed_user_can_get_perm_list()
     {
         $user = User::find(1);
 

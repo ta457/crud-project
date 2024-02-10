@@ -16,39 +16,19 @@ class Permission extends Model
         return $this->belongsToMany(Role::class, 'roles_permissions');
     }
 
-    public function scopePermsForRole($query)
+    public function scopePermsOf($query, $roleName)
     {
-        return $query->where('name', 'like', '%role%');
-    }
-
-    public function scopePermsForPermission($query)
-    {
-        return $query->where('name', 'like', '%permission%');
-    }
-
-    public function scopePermsForUser($query)
-    {
-        return $query->where('name', 'like', '%user%');
-    }
-
-    public function scopePermsForCategory($query)
-    {
-        return $query->where('name', 'like', '%categor%');
-    }
-
-    public function scopePermsForProduct($query)
-    {
-        return $query->where('name', 'like', '%product%');
+        return $query->where('name', 'like', '%' . $roleName . '%');
     }
 
     public function getSortedPermsAttribute()
     {
         return [
-            'role' => $this->permsForRole()->get(),
-            'permission' => $this->permsForPermission()->get(),
-            'user' => $this->permsForUser()->get(),
-            'category' => $this->permsForCategory()->get(),
-            'product' => $this->permsForProduct()->get(),
+            'role' => $this->permsOf('role')->get(),
+            'permission' => $this->permsOf('permission')->get(),
+            'user' => $this->permsOf('user')->get(),
+            'category' => $this->permsOf('cate')->get(),
+            'product' => $this->permsOf('product')->get(),
         ];
     }
 }

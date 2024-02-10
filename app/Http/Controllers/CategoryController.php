@@ -6,29 +6,23 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
-use App\Services\SubCategoryService;
 
 class CategoryController extends Controller
 {
     protected $cateService;
 
-    protected $subCateService;
-
-    public function __construct(CategoryService $cateService, SubCategoryService $subCateService)
+    public function __construct(CategoryService $cateService)
     {
         $this->cateService = $cateService;
-        $this->subCateService = $subCateService;
     }
 
     public function index()
     {
-        $categories = $this->cateService->getAll();
+        $categories = $this->cateService->getLatestCategories();
 
-        $subCategories = $this->subCateService->getSubCateWithCate();
+        $groups = $this->cateService->getGroups();
 
-        $user = auth()->user();
-
-        return view('categories.index', compact('categories','subCategories', 'user'));
+        return view('categories.index', compact('groups','categories'));
     }
 
     public function store(StoreCategoryRequest $request)
@@ -40,16 +34,16 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $user = auth()->user();
+        $groups = $this->cateService->getGroups();
 
-        return view('categories.show', compact('category', 'user'));
+        return view('categories.show', compact('category', 'groups'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         $this->cateService->updateCategory($request, $category);
 
-        return redirect()->route('web.categories.show', $category->id);
+        return redirect()->route('web.categories.index');
     }
 
     public function destroy(Category $category)

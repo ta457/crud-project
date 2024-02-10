@@ -1,6 +1,6 @@
-@php
-    $route = '/products';
-@endphp
+<script src="{{ asset('js/product.js') }}" defer></script>
+
+@php $route = '/products'; @endphp
 
 <x-app-layout>
     <x-slot name="sidebar">
@@ -12,7 +12,7 @@
             {{ __('Products') }}
         </h2>
 
-        @if ($user->hasPermission('create-product'))
+        @userCan('create-product')
             <div>
                 <x-create-item-btn btnId="createProductModalBtn" modalId="createProductModal">
                     New product
@@ -32,10 +32,15 @@
                             <x-table-search :route="$route">
                                 <select
                                     class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    name="sub_category_id" id="sub_category_id">
+                                    name="category_id" id="category_id">
                                     <option value="0">All</option>
-                                    @foreach ($subCategories as $subCate)
-                                        <option value="{{ $subCate->id }}">{{ $subCate->name }}</option>
+                                    @foreach ($categories as $cate)
+                                        <option value="{{ $cate->id }}"
+                                            @if (request()->category_id == $cate->id)
+                                                selected
+                                            @endif>
+                                            {{ $cate->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </x-table-search>
@@ -44,46 +49,19 @@
                         <x-slot name="tbody">
                             @php $count = 1; @endphp
                             @foreach ($products as $product)
-                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50">
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->id }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->category_name }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->name }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->description }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->price }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a onclick="showProduct({{ $product->id }})"
-                                            class="cursor-pointer block w-full h-full px-4 py-2">
-                                            {{ $product->quantity }}
-                                        </a>
-                                    </td>
-                                    @if ($user->hasPermission('delete-product'))
-                                        <x-table-row-delete-btn :route="$route" :id="$product->id" />
+                                <tr class="cursor-pointer border-b dark:border-gray-700 hover:bg-gray-50" 
+                                    data-route="{{ route('products.show', $product->id) }}">
+
+                                    <x-table-cell :data="$count" />
+                                    <x-table-cell :data="$product->category_name" />
+                                    <x-table-cell :data="$product->name" />
+                                    <x-table-cell :data="$product->description" />
+                                    <x-table-cell :data="$product->price" />
+                                    <x-table-cell :data="$product->quantity" />
+                                    @userCan('delete-product')
+                                        <x-table-row-delete-btn class="prod-delete-btn" :route="$route" :dataId="$product->id" />
                                     @endif
+                                    
                                 </tr>
                                 @php $count++; @endphp
                             @endforeach
@@ -99,63 +77,62 @@
         </div>
     </div>
 
-    @if ($user->hasPermission('create-product'))
-        <x-create-item-modal :route="$route" header="Add product" modalId="createProductModal">
-            <div class="sm:col-span-2">
-                <label for="sub_category_id"
+    @userCan('create-product')
+        <x-create-item-modal :route="$route" header="Add product" modalId="createProductModal" formId="createProd">
+            <div class="sm:col-span-2 w-fit relative" id="preview-create">
+            </div>
+            <div class="">
+                <label for="img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
+                    image</label>
+                <input type="file" name="img" id="img" accept="image/*"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+            </div>
+            <div class="">
+                <label for="category_id"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product category</label>
                 <div class="flex gap-2">
-                    <select name="sub_category_id" id="sub_category_id"
+                    <select name="category_id" id="category_id"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        @foreach ($subCategories as $subCategory)
-                            <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="sm:col-span-2">
+            <div class="">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     name</label>
                 <input type="text" name="name" id="name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product name">
             </div>
-            <div class="sm:col-span-2">
+            <div class="">
                 <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     description</label>
                 <input type="text" name="description" id="description"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product description">
             </div>
-            <div class="sm:col-span-2">
+            <div class="">
                 <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     price</label>
                 <input min="0" type="number" name="price" id="price"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product price">
             </div>
-            <div class="sm:col-span-2">
+            <div class="">
                 <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
                     quantity</label>
                 <input min="0" type="number" name="quantity" id="quantity"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Type product quantity">
             </div>
-            <div class="sm:col-span-2">
-                <label for="img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
-                    image</label>
-                <input type="file" name="img" id="img"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-            </div>
-
         </x-create-item-modal>
-
-        <x-update-product-modal :subCategories="$subCategories" :user="$user"></x-update-product-modal>
     @endif
 
-    @if ($user->hasPermission('delete-product'))
+    <x-update-product-modal :categories="$categories"></x-update-product-modal>
+
+    @userCan('delete-product')
         <x-delete-modal />
     @endif
-
-    <script src="{{ asset('js/product.js') }}"></script>
 </x-app-layout>

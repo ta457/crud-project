@@ -1,3 +1,5 @@
+<script src="{{ asset('js/category.js') }}" defer></script>
+
 <x-app-layout>
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
@@ -17,11 +19,34 @@
     <div class="">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden">
-                @if ($user->hasPermission('update-category'))
-                <form action="/categories/{{ $category->id }}" method="POST">
+                @userCan('update-category')
+                <form action="/categories/{{ $category->id }}" method="POST" id="updateCategory">
                     @csrf
                     @method('PATCH') @endif
                     <div class="text-gray-900 dark:text-gray-100 flex flex-col gap-4">
+                        <div class="max-w-lg">
+                            <label for="select-group"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Group</label>
+                            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500""
+                                name="select-group" id="select-group">
+                                <option value="0">New group</option>
+                                @foreach ($groups as $group)
+                                    <option value="{{ $group->group }}"
+                                        @if ($group->group == $category->group)
+                                            selected
+                                        @endif>
+                                        {{ $group->group }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="max-w-lg hidden" id="group-name">
+                            <label for="group"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New group name</label>
+                            <input type="text" name="group" id="group" value="{{ $category->group }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Type group name">
+                        </div>
                         <div class="max-w-lg">
                             <label for="name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category name</label>
@@ -37,15 +62,15 @@
                                 placeholder="Type category description" value="{{ $category->description }}">
                         </div>
 
-                        @if ($user->hasPermission('update-category'))
+                        @userCan('update-category')
                             <div class="max-w-lg flex gap-2">
-                                <button
+                                <button onclick="AppUtils.validateForm('updateCategory')"
                                     class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-                                    type="submit">
+                                    type="button">
                                     Save
                                 </button>
 
-                                <button onclick="changeDeleteFormAction('/categories/', {{ $category->id }})"\
+                                <button onclick="changeDeleteFormAction('/categories/', {{ $category->id }})"
                                     data-modal-target="deleteModal" data-modal-toggle="deleteModal"
                                     class="text-rose-600 inline-flex items-center hover:text-white border border-rose-600 hover:bg-rose-600 focus:ring-4 focus:outline-none focus:ring-rose-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-rose-500 dark:text-rose-500 dark:hover:text-white dark:hover:bg-rose-600 dark:focus:ring-rose-900"
                                     type="button">
@@ -54,12 +79,12 @@
                             </div>
                         @endif               
                     </div>
-                @if ($user->hasPermission('update-category')) </form> @endif
+                @userCan('update-category') </form> @endif
             </div>
         </div>
     </div>
     
-    @if ($user->hasPermission('delete-category'))
+    @userCan('delete-category')
         <x-delete-modal />
     @endif
 </x-app-layout>

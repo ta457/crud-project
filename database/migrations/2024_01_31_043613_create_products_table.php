@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('price');
             $table->string('img')->nullable();
             $table->integer('quantity')->default(0);
-            $table->foreignId('sub_category_id');
-            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
+            $table->foreignId('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

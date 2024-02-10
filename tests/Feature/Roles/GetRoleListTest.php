@@ -19,7 +19,7 @@ class GetRoleListTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_cannot_get_role_list_if_not_admin()
+    public function test_authenticated_user_cannot_get_role_list_if_not_allowed()
     {
         $user = User::factory()->create();
 
@@ -28,7 +28,7 @@ class GetRoleListTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_get_role_list()
+    public function test_allowed_user_can_get_role_list()
     {
         $user = User::find(1);
 

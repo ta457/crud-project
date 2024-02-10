@@ -9,16 +9,16 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'name','description','price','quantity','sub_category_id' ];
+    protected $fillable = [ 'name','description','price','quantity','category_id' ];
 
-    public function subCategory()
+    public function category()
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function getCategoryNameAttribute()
     {
-        return $this->subCategory->name;
+        return $this->category->name;
     }
 
     public function getImagePathAttribute()
@@ -42,6 +42,6 @@ class Product extends Model
         }
 
         return $query->where('name', 'like', '%' . $keyword . '%')
-            ->where('sub_category_id', $categoryId);
+            ->where('category_id', $categoryId);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Services\PermissionService;
 use App\Services\RoleService;
@@ -24,11 +23,9 @@ class RoleController extends Controller
     {
         $roles = $this->roleService->getLatestRoles();
 
-        $user = auth()->user();
-
         $sortedPerms = $this->permService->getSortedPerms();
 
-        return view('roles.index', compact('roles', 'user', 'sortedPerms'));
+        return view('roles.index', compact('roles', 'sortedPerms'));
     }
 
     public function store(StoreRoleRequest $request)

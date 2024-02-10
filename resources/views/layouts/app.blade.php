@@ -14,7 +14,9 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="{{ asset('js/base.js') }}"></script>
+
+    <script src="{{ asset('js/base.js') }}" defer></script>
+    
 </head>
 
 <body class="font-sans antialiased flex">

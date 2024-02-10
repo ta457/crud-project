@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Category;
+use App\Models\Group;
 use App\Models\Permission;
 use App\Models\Product;
 use App\Models\Role;
@@ -140,43 +141,55 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // create categories ========================================================
-
         $category1 = Category::create([
-            'name' => 'Meat',
-            'description' => 'Meat description'
-        ]);
-
-        $category2 = Category::create([
-            'name' => 'Fruit',
-            'description' => 'Fruit description'
-        ]);
-
-        // create sub categories ====================================================
-
-        $category1->subCategories()->create([
+            'group' => 'meat',
             'name' => 'Beef',
             'description' => 'Beef description'
         ]);
 
-        $category1->subCategories()->create([
-            'name' => 'Chicken',
-            'description' => 'Chicken description'
-        ]);
-
-        $category2->subCategories()->create([
+        $category2 = Category::create([
+            'group' => 'fruit',
             'name' => 'Apple',
             'description' => 'Apple description'
         ]);
 
-        $category2->subCategories()->create([
+        $category3 = Category::create([
+            'group' => 'meat',
+            'name' => 'Chicken',
+            'description' => 'Chicken description'
+        ]);
+
+        $category4 = Category::create([
+            'group' => 'fruit',
             'name' => 'Orange',
             'description' => 'Orange description'
         ]);
+
+        // create sub categories ====================================================
+        // $category1->subCategories()->create([
+        //     'name' => 'Beef',
+        //     'description' => 'Beef description'
+        // ]);
+
+        // $category1->subCategories()->create([
+        //     'name' => 'Chicken',
+        //     'description' => 'Chicken description'
+        // ]);
+
+        // $category2->subCategories()->create([
+        //     'name' => 'Apple',
+        //     'description' => 'Apple description'
+        // ]);
+
+        // $category2->subCategories()->create([
+        //     'name' => 'Orange',
+        //     'description' => 'Orange description'
+        // ]);
         
-        foreach (SubCategory::all() as $subCategory)
+        foreach (Category::all() as $cate)
         {
             Product::factory(2)->create([
-                'sub_category_id' => $subCategory->id
+                'category_id' => $cate->id
             ]);
         }
     }

@@ -24,7 +24,7 @@ class DeleteRoleTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_cannot_delete_role_if_not_admin()
+    public function test_authenticated_user_cannot_delete_role_if_not_allowed()
     {
         $user = User::factory()->create();
 
@@ -38,7 +38,7 @@ class DeleteRoleTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_delete_role()
+    public function test_allowed_user_can_delete_role()
     {
         $user = User::find(1);
 

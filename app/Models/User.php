@@ -50,7 +50,6 @@ class User extends Authenticatable
 
     public function getRoleNameListAttribute()
     {
-        // return a string of role names
         return $this->roles->pluck('name')->implode(', ');
     }
 

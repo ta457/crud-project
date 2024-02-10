@@ -29,26 +29,30 @@
                 @csrf
                 @method('PATCH')
                 <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                    <div class="sm:col-span-2">
-                        <img id="product-img" src="" alt="product_img" class="w-40 h-40 rounded-lg">
+                    <div class="">
+                        <label for="img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Product image
+                        </label>
+                        <img id="product-img" src="" alt="product_img" class="w-40 h-40 rounded-lg object-cover">
                     </div>
-                    @if ($user->hasPermission('update-product'))
+                    @userCan('update-product')
                         <div>
                             <label for="img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Change product image
                             </label>
                             <input type="file" name="img" id="update-img"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <div class="w-fit relative" id="preview-update"></div>
                         </div>
                     @endif
                     <div>
-                        <label for="update-sub_category_id"
+                        <label for="update-category_id"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product category</label>
-                        <select name="sub_category_id" id="sub_category_id-select"
+                        <select name="category_id" id="update-category_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @foreach ($subCategories as $subCategory)
-                                <option value="{{ $subCategory->id }}">
-                                    {{ $subCategory->name }}
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">
+                                    {{ $category->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -82,11 +86,11 @@
                             placeholder="Type product quantity" value="">
                     </div>
                 </div>
-                @if ($user->hasPermission('update-product'))
+                @userCan('update-product')
                     <div class="max-w-lg">
-                        <button
+                        <button onclick="AppUtils.validateForm('updateProductForm')"
                             class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-                            type="submit">
+                            type="button">
                             Save
                         </button>
                     </div>
