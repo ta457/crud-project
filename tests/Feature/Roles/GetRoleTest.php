@@ -14,10 +14,7 @@ class GetRoleTest extends TestCase
     
     public function test_unauthenticated_user_cannot_get_role()
     {
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $response = $this->get(route('web.roles.show', $role->id));
 
@@ -28,10 +25,7 @@ class GetRoleTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $response = $this->actingAs($user)->get(route('web.roles.show', $role->id));
 
@@ -42,10 +36,7 @@ class GetRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $response = $this->actingAs($user)->get(route('web.roles.show', $role->id));
 

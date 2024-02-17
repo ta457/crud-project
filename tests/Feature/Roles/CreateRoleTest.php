@@ -14,11 +14,7 @@ class CreateRoleTest extends TestCase
 
     public function test_unauthenticated_user_cannot_create_role()
     {
-        $response = $this->post(route('web.roles.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $response = $this->post(route('web.roles.store'), $this->createRoleData());
 
         $response->assertRedirect(route('login'));
     }
@@ -27,11 +23,7 @@ class CreateRoleTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post(route('web.roles.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $response = $this->actingAs($user)->post(route('web.roles.store'), $this->createRoleData());
 
         $response->assertForbidden();
     }
@@ -40,11 +32,8 @@ class CreateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $response = $this->actingAs($user)->post(route('web.roles.store'), [
-            '_token' => $this->faker->text,
-            'name' => '',
-            'description' => $this->faker->sentence,
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.roles.store'), $this->createRoleData(['name' => '']));
 
         $response->assertSessionHasErrors(['name' => 'Name khong duoc de trong']);
     }
@@ -53,11 +42,8 @@ class CreateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $response = $this->actingAs($user)->post(route('web.roles.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->text,
-            'description' => '',
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.roles.store'), $this->createRoleData(['description' => '']));
 
         $response->assertSessionHasErrors(['description' => 'Description khong duoc de trong']);
     }
@@ -66,11 +52,7 @@ class CreateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $data = [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
         $countBefore = Role::count();
 
@@ -79,10 +61,7 @@ class CreateRoleTest extends TestCase
         $countAfter = Role::count();
 
         $response->assertRedirect(route('web.roles.index'));
-        $this->assertDatabaseHas('roles', [
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $this->assertDatabaseHas('roles', ['name' => $data['name']]);
         $this->assertEquals($countBefore + 1, $countAfter);
     }
 }

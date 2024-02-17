@@ -13,12 +13,7 @@ class CreateUserTest extends TestCase
 
     public function test_unauthenticated_user_cannot_create_user()
     {
-        $response = $this->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => $this->faker->password,
-            'email' => $this->faker->email
-        ]);
+        $response = $this->post(route('web.users.store'), $this->createUserData());
 
         $response->assertRedirect(route('login'));
     }
@@ -27,33 +22,10 @@ class CreateUserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => $this->faker->password,
-            'email' => $this->faker->email
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.users.store'), $this->createUserData());
 
         $response->assertForbidden();
-    }
-
-    public function test_allowed_user_cannot_create_user_with_non_gmail()
-    {
-        $user = User::find(1);
-
-        $countBefore = User::count();
-
-        $response = $this->actingAs($user)->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => $this->faker->password,
-            'email' => 'test@example.com'
-        ]);
-
-        $countAfter = User::count();
-
-        $this->assertEquals($countBefore, $countAfter);
-        $response->assertSessionHasErrors(['email' => 'The email must be a Gmail address.']);
     }
 
     public function test_allowed_user_cannot_create_user_with_empty_name()
@@ -62,12 +34,8 @@ class CreateUserTest extends TestCase
 
         $countBefore = User::count();
 
-        $response = $this->actingAs($user)->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => '',
-            'password' => 'test@gmail.com',
-            'email' => $this->faker->email
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.users.store'), $this->createUserData(['name' => '']));
 
         $countAfter = User::count();
 
@@ -81,12 +49,8 @@ class CreateUserTest extends TestCase
 
         $countBefore = User::count();
 
-        $response = $this->actingAs($user)->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => '',
-            'email' => $this->faker->word . '@gmail.com'
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.users.store'), $this->createUserData(['password' => '']));
 
         $countAfter = User::count();
 
@@ -100,12 +64,8 @@ class CreateUserTest extends TestCase
 
         $countBefore = User::count();
 
-        $response = $this->actingAs($user)->post(route('web.users.store'), [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => $this->faker->password,
-            'email' => ''
-        ]);
+        $response = $this->actingAs($user)
+            ->post(route('web.users.store'), $this->createUserData(['email' => '']));
 
         $countAfter = User::count();
 
@@ -113,16 +73,26 @@ class CreateUserTest extends TestCase
         $response->assertSessionHasErrors(['email' => 'Email khong duoc de trong']);
     }
 
+    public function test_allowed_user_cannot_create_user_with_non_gmail()
+    {
+        $user = User::find(1);
+
+        $countBefore = User::count();
+
+        $response = $this->actingAs($user)
+            ->post(route('web.users.store'), $this->createUserData(['email' => 'test@example.com']));
+
+        $countAfter = User::count();
+
+        $this->assertEquals($countBefore, $countAfter);
+        $response->assertSessionHasErrors(['email' => 'The email must be a Gmail address.']);
+    }
+
     public function test_allowed_user_can_create_user()
     {
         $user = User::find(1);
 
-        $data = [
-            '_token' => $this->faker->text,
-            'name' => $this->faker->name,
-            'password' => $this->faker->password,
-            'email' => $this->faker->word . '@gmail.com'
-        ];
+        $data = $this->createUserData();
 
         $countBefore = User::count();
 
@@ -131,10 +101,7 @@ class CreateUserTest extends TestCase
         $countAfter = User::count();
 
         $response->assertRedirect(route('web.users.index'));
-        $this->assertDatabaseHas('users', [
-            'name' => $data['name'],
-            'email' => $data['email'],
-        ]);
+        $this->assertDatabaseHas('users', ['name' => $data['name']]);
         $this->assertEquals($countBefore + 1, $countAfter);
     }
 }

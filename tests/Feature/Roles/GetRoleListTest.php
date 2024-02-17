@@ -32,15 +32,9 @@ class GetRoleListTest extends TestCase
     {
         $user = User::find(1);
 
-        $role1 = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role1 = Role::factory()->create();
 
-        $role2 = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role2 = Role::factory()->create();
 
         $response = $this->actingAs($user)->get(route('web.roles.index'));
 

@@ -14,10 +14,7 @@ class DeleteRoleTest extends TestCase
     
     public function test_unauthenticated_user_cannot_delete_role()
     {
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $response = $this->delete(route('web.roles.destroy', $role->id));
 
@@ -28,10 +25,7 @@ class DeleteRoleTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $response = $this->actingAs($user)->delete(route('web.roles.destroy', $role->id));
 
@@ -42,10 +36,7 @@ class DeleteRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
         $countBefore = Role::count();
 

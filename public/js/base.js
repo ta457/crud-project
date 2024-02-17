@@ -5,8 +5,8 @@
 // show error above input field [DONE]
 // sort product by category [DONE]
 // keep selection & search inp after refresh [DONE]
-// mailtrap
-// 100% test
+// mail
+// 100% test [DONE]
 
 const AppUtils = (function () {
     function changeDeleteFormAction(url, id) {

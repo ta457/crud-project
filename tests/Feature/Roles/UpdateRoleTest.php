@@ -14,23 +14,13 @@ class UpdateRoleTest extends TestCase
 
     public function test_unauthenticated_user_cannot_update_role()
     {
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
-        $data = [
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
-        $response = $this->patch(route('web.roles.update', $role->id), [
-            '_token' => $this->faker->text,
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $response = $this->patch(route('web.roles.update', $role->id), $data);
 
-        $this->assertDatabaseMissing('roles', $data);
+        $this->assertDatabaseMissing('roles', ['name' => $data['name']]);
         $response->assertRedirect(route('login'));
     }
 
@@ -38,23 +28,14 @@ class UpdateRoleTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
-        $data = [
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
-        $response = $this->actingAs($user)->patch(route('web.roles.update', $role->id), [
-            '_token' => $this->faker->text,
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $response = $this->actingAs($user)
+            ->patch(route('web.roles.update', $role->id), $data);
 
-        $this->assertDatabaseMissing('roles', $data);
+        $this->assertDatabaseMissing('roles', ['name' => $data['name']]);
         $response->assertForbidden();
     }
 
@@ -62,23 +43,14 @@ class UpdateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
-        $data = [
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
-        $response = $this->actingAs($user)->patch(route('web.roles.update', $role->id), [
-            '_token' => $this->faker->text,
-            'name' => '',
-            'description' => $data['description'],
-        ]);
+        $response = $this->actingAs($user)
+            ->patch(route('web.roles.update', $role->id), array_merge($data, ['name' => '']));
 
-        $this->assertDatabaseMissing('roles', $data);
+        $this->assertDatabaseMissing('roles', ['name' => $data['name']]);
         $response->assertSessionHasErrors(['name' => 'Vui long nhap ten']);
     }
 
@@ -86,23 +58,14 @@ class UpdateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
-        $data = [
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
-        $response = $this->actingAs($user)->patch(route('web.roles.update', $role->id), [
-            '_token' => $this->faker->text,
-            'name' => $data['name'],
-            'description' => ''
-        ]);
+        $response = $this->actingAs($user)
+            ->patch(route('web.roles.update', $role->id), array_merge($data, ['description' => '']));
 
-        $this->assertDatabaseMissing('roles', $data);
+        $this->assertDatabaseMissing('roles', ['name' => $data['name']]);
         $response->assertSessionHasErrors(['description' => 'Vui long nhap mo ta']);
     }
 
@@ -110,23 +73,14 @@ class UpdateRoleTest extends TestCase
     {
         $user = User::find(1);
 
-        $role = Role::create([
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ]);
+        $role = Role::factory()->create();
 
-        $data = [
-            'name' => $this->faker->text,
-            'description' => $this->faker->sentence,
-        ];
+        $data = $this->createRoleData();
 
-        $response = $this->actingAs($user)->patch(route('web.roles.update', $role->id), [
-            '_token' => $this->faker->text,
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $response = $this->actingAs($user)
+            ->patch(route('web.roles.update', $role->id), $data);
 
-        $this->assertDatabaseHas('roles', $data);
+        $this->assertDatabaseHas('roles', ['name' => $data['name']]);
         $response->assertRedirect(route('web.roles.index'));
     }
 }

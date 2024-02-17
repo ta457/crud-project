@@ -31,7 +31,7 @@ class GetUserListTest extends TestCase
     {
         $user = User::find(1);
 
-        $users = User::factory()->count(2)->create();
+        $users = User::factory(2)->create();
 
         $response = $this->actingAs($user)->get(route('web.users.index'));
 
