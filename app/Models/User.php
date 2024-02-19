@@ -79,12 +79,18 @@ class User extends Authenticatable
         return false;
     }
     
-    public function scopeSearch($query, $keyword)
+    public function scopeSearch($query, $keyword, $roleId = null)
     {
-        return $query->where('name', 'like', "%$keyword%")
-            ->orWhere('email', 'like', "%$keyword%")
-            ->orWhereHas('roles', function ($query) use ($keyword) {
-                $query->where('name', 'like', "%$keyword%");
+        if ($roleId == 0) {
+            return $query->where('name', 'like', '%' . $keyword . '%')
+                ->orWhere('email', 'like', "%$keyword%");
+        }
+
+        return $query->whereHas('roles', function ($roleQuery) use ($roleId) {
+                $roleQuery->where('roles.id', $roleId);
+            })->where(function ($userQuery) use ($keyword) {
+                $userQuery->where('name', 'like', '%' . $keyword . '%')
+                        ->orWhere('email', 'like', "%$keyword%");
             });
     }
 }

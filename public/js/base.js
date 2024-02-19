@@ -1,12 +1,13 @@
-// js revealing module pattern [DONE]
+// js module pattern [DONE]
 // 1 middleware file [DONE]
 // product img preview [DONE]
 // 1 category table [DONE]
-// show error above input field [DONE]
+// show alert above input field [DONE]
 // sort product by category [DONE]
 // keep selection & search inp after refresh [DONE]
-// mail
-// 100% test [DONE]
+// sweetalert [DONE]
+// test [DONE]
+// send reset pw email [DONE]
 
 const AppUtils = (function () {
     function changeDeleteFormAction(url, id) {
@@ -57,10 +58,24 @@ const AppUtils = (function () {
         throw error;
     }
 
+    function handleSelectFilter(selectElementId, url) {
+        const selectElement = document.getElementById(selectElementId);
+
+        selectElement.addEventListener('change', function () {
+            let selectedId = this.value;
+            if (selectedId !== '0') {
+                window.location.href = url + '/search?' + selectElementId + '=' + selectedId;
+            } else {
+                window.location.href = url;
+            }
+        });
+    }
+
     return {
         changeDeleteFormAction: changeDeleteFormAction,
         validateForm: validateForm,
         fetchData: fetchData,
-        handleFetchError: handleFetchError
+        handleFetchError: handleFetchError,
+        handleSelectFilter: handleSelectFilter
     };
 })();

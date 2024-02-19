@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Repositories\RoleRepository;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RoleService
 {
@@ -41,20 +42,26 @@ class RoleService
         $role = $this->roleRepo->create($request->validated());
 
         $this->assignPermsFromRequest($role, $request);
+
+        Alert::success('Success', 'Role created successfully!');
     }
 
     public function updateRole(UpdateRoleRequest $request, Role $role)
     {
-        if ($role->id !== 1) {
-            $role->update($request->validated());
-            $this->assignPermsFromRequest($role, $request);
-        }
+        $role->update($request->validated());
+
+        $this->assignPermsFromRequest($role, $request);
+        
+        Alert::success('Success', 'Role updated successfully!');
     }
 
     public function deleteRole(Role $role)
     {
         if ($role->id !== 1) {
             $this->roleRepo->delete($role->id);
+            Alert::success('Success', 'Role deleted successfully!');
+        } else {
+            Alert::error('Error', 'You are not allowed to delete this role!');
         }
     }
 }

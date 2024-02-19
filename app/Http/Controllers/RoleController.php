@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
 use App\Services\PermissionService;
 use App\Services\RoleService;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RoleController extends Controller
 {
@@ -38,19 +39,17 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         if ($role->id === 1) {
+            Alert::error('Error', 'You are not allowed to view this role!');
             return redirect()->route('web.roles.index');
         }
 
-        $user = auth()->user();
-
         $sortedPerms = $this->permService->getSortedPerms();
 
-        return view('roles.show',compact('role', 'user', 'sortedPerms'));
+        return view('roles.show',compact('role', 'sortedPerms'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        
         $this->roleService->updateRole($request, $role);
         
         return redirect()->route('web.roles.index');

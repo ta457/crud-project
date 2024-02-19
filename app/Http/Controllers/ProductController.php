@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-
 class ProductController extends Controller
 {
     protected $prodService;

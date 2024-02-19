@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\Role;
+use App\Mail\Email;
 use App\Models\User;
 use App\Services\UserService;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -21,14 +23,14 @@ class UserController extends Controller
         $this->roleService = $roleService;
     }
 
-    public function index()
+    public function index($users = null)
     {
-        $users = $this->userService->getLatestUsers();
-
-        $currentUser = auth()->user();
+        if (!$users) {
+            $users = $this->userService->getLatestUsers();
+        }
         $roles = $this->roleService->getAllExceptAdmin();
 
-        return view('users.index', compact('users', 'currentUser', 'roles'));
+        return view('users.index', compact('users', 'roles'));
     }
 
     public function store(StoreUserRequest $request)
@@ -40,9 +42,8 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        //dd($user->toArray());
-
         if ($user->hasRole('super-admin')) {
+            Alert::error('Error', 'You are not allowed to view this user!');
             return redirect()->route('web.users.index');
         }
 
@@ -68,11 +69,14 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $users = $this->userService->search($request->input('search'));
+        $users = $this->userService->search($request->input('search'), $request->input('role_id'));
 
-        $currentUser = auth()->user();
-        $roles = $this->roleService->getAllExceptAdmin();
+        return $this->index($users);
+    }
 
-        return view('users.index', compact('users', 'currentUser', 'roles'));
+    public function reset(User $user)
+    {
+        $this->userService->resetPassword($user);
+        return redirect()->route('web.users.index');
     }
 }

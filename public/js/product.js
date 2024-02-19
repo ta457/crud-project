@@ -103,14 +103,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // handle select category filter
 document.addEventListener('DOMContentLoaded', function () {
-    const cateSelect = document.getElementById('category_id');
-
-    cateSelect.addEventListener('change', function () {
-        let selectedId = this.value;
-        if (selectedId !== '0') {
-            window.location.href = '/products/search?category_id=' + selectedId;
-        } else {
-            window.location.href = '/products';
-        }
-    });
+    AppUtils.handleSelectFilter('category_id', '/products');
 });

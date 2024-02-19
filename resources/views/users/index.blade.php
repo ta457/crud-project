@@ -1,3 +1,5 @@
+<script src="{{ asset('js/user.js') }}" defer></script>
+
 <x-app-layout>
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
@@ -26,7 +28,21 @@
                         @php $route = '/users'; @endphp
 
                         <x-slot name="search">
-                            <x-table-search :route="$route"></x-table-search>
+                            <x-table-search :route="$route">
+                                <select
+                                    class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    name="role_id" id="role_id">
+                                    <option value="0">All</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}"
+                                            @if (request()->role_id == $role->id)
+                                                selected
+                                            @endif>
+                                            {{ $role->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </x-table-search>
                         </x-slot>
 
                         <x-slot name="tbody">

@@ -55,12 +55,16 @@
                             </div>
                         </div>
                         @userCan('update-user')
-                            <div class="max-w-lg">
+                            <div class="max-w-lg flex gap-2">
                                 <button onclick="AppUtils.validateForm('updateUser')"
                                     class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
                                     type="button">
                                     Save
                                 </button>
+                                <a class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                                    href="/users/{{ $user->id }}/reset">
+                                    Reset Password
+                                </a>
                             </div>
                         @endif         
                     </div>

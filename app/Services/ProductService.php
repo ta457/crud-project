@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductService
 {
@@ -28,17 +29,27 @@ class ProductService
 
     public function storeProduct(StoreProductRequest $request)
     {
-        return $this->productRepo->create($request->all());
+        $product = $this->productRepo->create($request->validated());
+
+        Alert::success('Success', 'Product created successfully!');
+
+        return $product;
     }
 
     public function updateProduct (UpdateProductRequest $request, Product $product)
     {
-        return $this->productRepo->update($request->validated(), $product->id);
+        $product = $this->productRepo->update($request->validated(), $product->id);
+
+        Alert::success('Success', 'Product updated successfully!');
+
+        return $product;
     }
 
     public function deleteProduct(Product $product)
     {
-        return $this->productRepo->delete($product->id);
+        $this->productRepo->delete($product->id);
+
+        Alert::success('Success', 'Product deleted successfully!');
     }
 
     public function search($searchKeyword, $cateId = null)
@@ -48,11 +59,11 @@ class ProductService
 
     public function storeProductImage($file, Product $product)
     {
-        return $this->productRepo->storeProductImage($file, $product);
+        $this->productRepo->storeProductImage($file, $product);
     }
 
     public function deleteProductImage(Product $product)
     {
-        return $this->productRepo->deleteProductImage($product);
+        $this->productRepo->deleteProductImage($product);
     }
 }

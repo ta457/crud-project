@@ -21,4 +21,18 @@ class UserRepository extends BaseRepository
     {
         return $this->model->latest()->paginate(10);
     }
+
+    public function resetPassword($user)
+    {
+        $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 8);
+
+        $user->update(['password' => bcrypt($password)]);
+
+        return $password;
+    }
+
+    public function search($searchKeyword, $roleId = null)
+    {
+        return $this->model->search($searchKeyword, $roleId);
+    }
 }

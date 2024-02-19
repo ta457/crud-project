@@ -6,6 +6,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MailController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +59,9 @@ Route::middleware('auth')->group(function () {
         ->name('web.permissions.show')
         ->middleware('check-permission:view-permissions');
 
+    Route::get('/users/search', [UserController::class, 'search'])
+        ->name('web.users.search')
+        ->middleware('check-permission:view-users');
     Route::post('/users/search', [UserController::class, 'search'])
         ->name('web.users.search')
         ->middleware('check-permission:view-users');
@@ -75,6 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])
         ->name('web.users.destroy')
         ->middleware('check-permission:delete-user');
+    Route::get('/users/{user}/reset', [UserController::class, 'reset'])
+        ->name('web.users.reset')
+        ->middleware('check-permission:update-user');
 
     Route::get('/categories', [CategoryController::class, 'index'])
         ->name('web.categories.index')
@@ -111,5 +119,7 @@ Route::middleware('auth')->group(function () {
         ->name('web.products.destroy')
         ->middleware('check-permission:delete-product');
 });
+
+Route::get('/send', [MailController::class, 'index']);
 
 require __DIR__ . '/auth.php';
